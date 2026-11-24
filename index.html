@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MIZAN SOLAR AND ELECTRONICS — Business Monitor</title>
+  <meta name="theme-color" content="#14532d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mizan Monitor">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+/* MIZAN SOLAR AND ELECTRONICS — Business Monitor. White, dark green, subtle blue. Mobile-first. */
+:root {
+  --green: #14532d; --green-d: #0e3d21; --green-l: #e8f3ec;
+  --blue: #3b6ea5; --blue-l: #e9f0f8;
+  --red: #b42318; --red-l: #fdecea; --amber: #92400e; --amber-l: #fff4e0;
+  --text: #1b2a22; --muted: #5b6b62; --line: #dfe5e1; --bg: #ffffff; --soft: #f6f8f6;
+  --r: 12px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding-bottom: 76px; }
+h1, h2, h3 { margin: 0; line-height: 1.25; }
+h2 { font-size: 1.25rem; color: var(--green); }
+h3 { font-size: 1.05rem; }
+a { color: var(--blue); }
+.hidden { display: none !important; }
+
+/* Header + nav */
+.topbar { background: linear-gradient(135deg,#14532d,#0f4023); color: #fff; padding: 10px 16px; position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.brand { font-weight: 800; letter-spacing: .5px; font-size: 1rem; line-height: 1.15; }
+.brand small { display: block; font-weight: 500; opacity: .8; letter-spacing: 0; font-size: .72rem; }
+.brandwrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.logo { border-radius: 9px; flex: none; background: #fff; }
+.clock { text-align: right; line-height: 1.2; flex: none; }
+.clock b { display: block; font-size: 1rem; letter-spacing: .3px; }
+.clock span { font-size: .72rem; opacity: .85; }
+nav#nav a svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; margin: 0 auto 2px; display: block; flex: none; }
+nav#nav a span { display: block; }
+nav#nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--line); display: flex; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
+nav#nav a { flex: 1; font-weight: 600; text-align: center; padding: 12px 2px; font-size: .72rem; font-weight: 700; color: var(--muted); text-decoration: none; border-top: 3px solid transparent; min-height: 56px; display: flex; flex-direction: column; justify-content: center; }
+nav#nav a.active { color: var(--green); border-top-color: var(--green); background: var(--green-l); }
+main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+
+/* Layout bits */
+.page-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(16,40,26,.07); }
+.card > h3 { margin-bottom: 10px; color: var(--green); }
+.grid { display: grid; gap: 12px; }
+.tiles { grid-template-columns: repeat(2, 1fr); margin-bottom: 14px; }
+.tile { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: var(--r); padding: 12px 14px; box-shadow: 0 1px 3px rgba(16,40,26,.07); }
+.tile.blue { border-left-color: var(--blue); }
+.tile.warn { border-left-color: var(--red); }
+.tile .lbl { font-size: .8rem; color: var(--muted); font-weight: 600; }
+.tile .val { font-size: 1.3rem; font-weight: 800; color: var(--green); margin-top: 2px; word-break: break-word; }
+.tile .sub { font-size: .75rem; color: var(--muted); }
+.tile.blue .val { color: var(--blue); }
+.tile.warn .val { color: var(--red); }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.right { text-align: right; }
+.pos { color: var(--green); font-weight: 700; }
+.neg { color: var(--red); font-weight: 700; }
+.badge { display: inline-block; font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--green-l); color: var(--green); }
+.badge.low { background: var(--red-l); color: var(--red); }
+.badge.blue { background: var(--blue-l); color: var(--blue); }
+.badge.gray { background: #eceff1; color: #455a64; }
+.empty { text-align: center; color: var(--muted); padding: 24px 8px; }
+.banner { border-radius: var(--r); padding: 12px 14px; margin-bottom: 14px; background: var(--amber-l); color: var(--amber); border: 1px solid #f3d9a8; }
+.banner.info { background: var(--blue-l); color: #274a73; border-color: #c9dcf0; }
+
+/* Buttons & forms */
+button, .btn { font: inherit; font-weight: 700; min-height: 48px; padding: 0 18px; border-radius: 10px; border: 2px solid var(--green); background: var(--green); color: #fff; cursor: pointer; touch-action: manipulation; }
+button:hover { background: var(--green-d); }
+button.secondary { background: #fff; color: var(--green); }
+button.blue { background: var(--blue); border-color: var(--blue); }
+button.danger { background: #fff; color: var(--red); border-color: var(--red); }
+button.small { min-height: 40px; padding: 0 12px; font-size: .9rem; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+label { display: block; font-weight: 700; font-size: .9rem; margin: 12px 0 4px; }
+input, select, textarea { font: inherit; width: 100%; min-height: 48px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; background: #fff; color: var(--text); }
+input:focus, select:focus, textarea:focus, button:focus-visible, nav a:focus-visible { outline: 3px solid #9ec0e6; border-color: var(--blue); }
+.row { display: grid; gap: 10px; grid-template-columns: 1fr; }
+.row.two { grid-template-columns: 1fr 1fr; }
+.err { background: var(--red-l); color: var(--red); border: 1px solid #f5c2bd; border-radius: 10px; padding: 10px 12px; margin-top: 12px; font-weight: 600; }
+.toolbar { display: grid; gap: 8px; grid-template-columns: 1fr; margin-bottom: 12px; }
+.toolbar input, .toolbar select { margin: 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.chip { min-height: 40px; padding: 0 14px; border-radius: 99px; background: #fff; color: var(--green); font-size: .9rem; }
+.chip.on { background: var(--green); color: #fff; }
+
+/* Tables → cards on phones */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: .8rem; color: var(--muted); font-weight: 700; padding: 8px; border-bottom: 2px solid var(--line); }
+td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tfoot td { font-weight: 800; border-top: 2px solid var(--line); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+@media (max-width: 719px) {
+  table.rt thead { display: none; }
+  table.rt, table.rt tbody, table.rt tr, table.rt td { display: block; width: 100%; }
+  table.rt tr { border: 1px solid var(--line); border-radius: var(--r); padding: 8px 10px; margin-bottom: 10px; background: #fff; }
+  table.rt td { border: 0; padding: 4px 0; display: flex; justify-content: space-between; gap: 12px; text-align: right !important; }
+  table.rt td::before { content: attr(data-l); font-weight: 700; color: var(--muted); font-size: .82rem; text-align: left; flex: none; }
+  table.rt td.title { font-weight: 800; font-size: 1.05rem; color: var(--green); text-align: left !important; }
+  table.rt td.title::before, table.rt td.act::before { display: none; }
+  table.rt td.act { justify-content: flex-start; flex-wrap: wrap; gap: 8px; padding-top: 8px; }
+}
+
+@media (max-width: 719px) {
+  .scroll table:not(.rt) { font-size: .8rem; }
+  .scroll table:not(.rt) th, .scroll table:not(.rt) td { padding: 8px 4px; }
+}
+/* Dialog */
+dialog { border: 0; border-radius: 16px; padding: 0; width: min(560px, 94vw); max-height: 92vh; box-shadow: 0 10px 40px rgba(0,0,0,.3); }
+dialog.wide { width: min(820px, 96vw); }
+dialog::backdrop { background: rgba(10, 30, 18, .55); }
+.dlg-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); background: var(--green-l); position: sticky; top: 0; z-index: 2; }
+.dlg-head h3 { color: var(--green); }
+.dlg-body { padding: 4px 16px 16px; overflow-y: auto; max-height: calc(92vh - 140px); }
+.dlg-foot { padding: 12px 16px; border-top: 1px solid var(--line); display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.x { min-height: 40px; width: 40px; padding: 0; background: #fff; color: var(--green); }
+
+/* Sale form lines */
+.line { border: 1px solid var(--line); border-radius: var(--r); padding: 10px; margin-bottom: 10px; background: var(--soft); }
+.line .row { grid-template-columns: 1fr 1fr; }
+.line .row .full { grid-column: 1 / -1; }
+.line label { margin-top: 6px; }
+.line .ltotal { font-weight: 800; color: var(--green); }
+.totals { background: var(--green-l); border-radius: var(--r); padding: 12px; margin-top: 12px; }
+.totals div { display: flex; justify-content: space-between; padding: 3px 0; }
+.totals .big { font-size: 1.2rem; font-weight: 800; color: var(--green); border-top: 1px solid #c3dccb; margin-top: 4px; padding-top: 8px; }
+
+/* Toast */
+#toast { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); background: var(--green-d); color: #fff; padding: 12px 18px; border-radius: 10px; z-index: 100; max-width: 92vw; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+#toast.bad { background: var(--red); }
+
+canvas.chart { width: 100%; height: 240px; display: block; }
+
+/* Invoice (screen + print) */
+.invoice { color: #000; }
+.invoice h2 { color: #000; text-align: center; font-size: 1.3rem; letter-spacing: 1px; }
+.invoice .sub { text-align: center; color: #444; margin-bottom: 10px; font-size: .9rem; }
+.invoice .meta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 10px 0; font-size: .92rem; }
+.invoice table td, .invoice table th { padding: 6px 4px; }
+#print-area { display: none; }
+@media print {
+  body { padding: 0; background: #fff; }
+  body > *:not(#print-area) { display: none !important; }
+  #print-area { display: block !important; padding: 12mm; font-size: 12pt; }
+  .noprint { display: none !important; }
+}
+
+/* Larger screens: sidebar nav */
+@media (min-width: 720px) {
+  .tiles { grid-template-columns: repeat(3, 1fr); }
+  .row.two-md { grid-template-columns: 1fr 1fr; }
+  .row { grid-template-columns: 1fr 1fr; }
+  .toolbar { grid-template-columns: 2fr 1fr 1fr; }
+  .grid.cols2 { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 960px) {
+  body { padding: 0 0 0 210px; }
+  .topbar { margin-left: -210px; padding-left: 20px; z-index: 30; }
+  nav#nav { top: 0; bottom: auto; right: auto; width: 210px; flex-direction: column; border-top: 0; border-right: 1px solid var(--line); padding-top: 64px; }
+  nav#nav a { flex: none; text-align: left; flex-direction: row; align-items: center; gap: 14px; font-size: 1rem; padding: 14px 20px; border-top: 0; border-left: 4px solid transparent; min-height: 52px; }
+  nav#nav a.active { border-left-color: var(--green); }
+  #toast { bottom: 24px; }
+  .tiles { grid-template-columns: repeat(4, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) { button { transition: background .12s; } }
+
+@media (min-width: 960px) { nav#nav a svg { margin: 0; } .brand { font-size: 1.1rem; } }
+@media (max-width: 380px) { .clock span { display: none; } .brand { font-size: .92rem; } }
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brandwrap">
+      <img class="logo" src="icon.svg" alt="" width="38" height="38">
+      <div class="brand">MIZAN SOLAR AND ELECTRONICS<small>Business Monitor</small></div>
+    </div>
+    <div class="clock" aria-live="off"><b id="clockTime"></b><span id="clockDate"></span></div>
+  </header>
+  <nav id="nav" aria-label="Main">
+    <a href="#/dashboard" data-r="dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 9.5V20h14V9.5M10 20v-6h4v6"/></svg><span>Home</span></a>
+    <a href="#/sales" data-r="sales"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11h11l2-8H6.5M9 20h.01M17 20h.01"/></svg><span>Sales</span></a>
+    <a href="#/inventory" data-r="inventory"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/></svg><span>Stock</span></a>
+    <a href="#/customers" data-r="customers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 00-4-4H8a4 4 0 00-4 4v1M10 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7M20 20v-1a3.5 3.5 0 00-2.5-3.3M15.5 4.2a3.5 3.5 0 010 6.6"/></svg><span>People</span></a>
+    <a href="#/expenses" data-r="expenses"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h16a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 8V7a2 2 0 012-2h11M16.5 14h1"/></svg><span>Expense</span></a>
+    <a href="#/reports" data-r="reports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V4M16 20v-6M22 20H2"/></svg><span>Reports</span></a>
+    <a href="#/backup" data-r="backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4 20h16"/></svg><span>Backup</span></a>
+  </nav>
+  <main id="view" tabindex="-1"><p class="empty">Loading…</p></main>
+  <dialog id="dlg"></dialog>
+  <div id="toast" class="hidden" role="status" aria-live="polite"></div>
+  <div id="print-area"></div>
+
+  <noscript><p style="padding:16px">Please enable JavaScript to use this app.</p></noscript>
+  <script>
+/* utils.js — money, dates, validation, escaping. Pure functions (unit-tested in Node). */
+(function (root) {
+  'use strict';
+  const U = {};
+
+  // ---- Money & numbers (always 2 decimals) ----
+  U.round2 = function (n) {
+    return Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+  };
+  U.parseNum = function (v) {
+    if (v === null || v === undefined) return NaN;
+    const s = String(v).replace(/,/g, '').trim();
+    if (s === '') return NaN;
+    return Number(s);
+  };
+  U.money = function (n) {
+    const v = U.round2(n || 0);
+    const neg = v < 0;
+    const parts = Math.abs(v).toFixed(2).split('.');
+    // Bangladeshi/Indian digit grouping: 12,34,567.00
+    let i = parts[0], last3 = i.slice(-3), rest = i.slice(0, -3);
+    if (rest) rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',';
+    return (neg ? '-' : '') + '৳' + rest + last3 + '.' + parts[1];
+  };
+  U.qty = function (n) {
+    return String(Math.round(Number(n) * 1000) / 1000);
+  };
+
+  // ---- Dates (local time) ----
+  const pad = (x) => String(x).padStart(2, '0');
+  U.dateKey = function (d) {
+    d = d instanceof Date ? d : new Date(d);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  };
+  U.today = function () { return U.dateKey(new Date()); };
+  U.monthKey = function (dateStr) { return String(dateStr).slice(0, 7); };
+  U.isValidDate = function (s) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    const d = new Date(s + 'T00:00:00');
+    return !isNaN(d) && U.dateKey(d) === s;
+  };
+  U.formatDate = function (s) {
+    if (!s) return '';
+    const d = new Date(String(s).length === 10 ? s + 'T00:00:00' : s);
+    if (isNaN(d)) return String(s);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+  U.formatDateTime = function (iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return String(iso || '');
+    return U.formatDate(U.dateKey(d)) + ', ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  };
+  U.formatTime = function (iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return '';
+    let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+    return h + ':' + pad(d.getMinutes()) + ' ' + ap;
+  };
+  U.addDays = function (dateStr, n) {
+    const d = new Date(dateStr + 'T00:00:00');
+    d.setDate(d.getDate() + n);
+    return U.dateKey(d);
+  };
+  // Monday-based week start
+  U.weekStart = function (dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const diff = (d.getDay() + 6) % 7;
+    d.setDate(d.getDate() - diff);
+    return U.dateKey(d);
+  };
+  U.monthLabel = function (key) {
+    const d = new Date(key + '-01T00:00:00');
+    return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+  };
+  U.nowISO = function () { return new Date().toISOString(); };
+
+  // ---- Strings ----
+  U.esc = function (s) {
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+  U.clean = function (s) { return String(s === null || s === undefined ? '' : s).trim().replace(/\s+/g, ' '); };
+
+  // ---- Validation: each returns {ok, value, error} ----
+  U.validMoney = function (v, label, opts) {
+    opts = opts || {};
+    const n = U.parseNum(v);
+    if (isNaN(n)) return { ok: false, error: label + ' must be a number.' };
+    if (n < 0) return { ok: false, error: label + ' cannot be negative.' };
+    if (!opts.allowZero && n === 0) return { ok: false, error: label + ' must be greater than zero.' };
+    if (n > 1e9) return { ok: false, error: label + ' is too large.' };
+    if (Math.abs(n * 100 - Math.round(n * 100)) > 1e-6) return { ok: false, error: label + ' can have at most 2 decimal places.' };
+    return { ok: true, value: U.round2(n) };
+  };
+  U.validQty = function (v, label, opts) {
+    opts = opts || {};
+    const n = U.parseNum(v);
+    if (isNaN(n)) return { ok: false, error: label + ' must be a number.' };
+    if (n < 0) return { ok: false, error: label + ' cannot be negative.' };
+    if (!opts.allowZero && n === 0) return { ok: false, error: label + ' must be greater than zero.' };
+    if (n > 1e7) return { ok: false, error: label + ' is too large.' };
+    if (Math.abs(n * 1000 - Math.round(n * 1000)) > 1e-6) return { ok: false, error: label + ' can have at most 3 decimal places.' };
+    return { ok: true, value: Math.round(n * 1000) / 1000 };
+  };
+  U.validPhone = function (v) {
+    const s = U.clean(v);
+    if (!s) return { ok: true, value: '' };
+    if (!/^[+0-9][0-9 \-]{5,18}$/.test(s)) return { ok: false, error: 'Phone number looks invalid.' };
+    return { ok: true, value: s };
+  };
+  U.validText = function (v, label, max) {
+    const s = U.clean(v);
+    if (!s) return { ok: false, error: label + ' is required.' };
+    if (s.length > (max || 120)) return { ok: false, error: label + ' is too long.' };
+    return { ok: true, value: s };
+  };
+  U.validDate = function (v, label) {
+    if (!U.isValidDate(v)) return { ok: false, error: label + ' is not a valid date.' };
+    return { ok: true, value: v };
+  };
+
+  // Simple deterministic checksum (FNV-1a 32-bit) for backup integrity
+  U.checksum = function (str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, '0');
+  };
+  U.uid = function () {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  };
+
+  root.MZ = root.MZ || {};
+  root.MZ.U = U;
+  if (typeof module !== 'undefined' && module.exports) module.exports = U;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* db.js — IndexedDB access. All multi-store writes happen inside ONE transaction. */
+(function () {
+  'use strict';
+  const DB_NAME = 'mizan-business-monitor';
+  const DB_VERSION = 1;
+  const STORES = ['products', 'stockMovements', 'customers', 'sales', 'payments', 'expenses', 'meta'];
+  let dbPromise = null;
+
+  function open() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function (resolve, reject) {
+      if (!window.indexedDB) return reject(new Error('This browser does not support IndexedDB. Please use a modern browser.'));
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = function (e) {
+        const db = req.result;
+        if (!db.objectStoreNames.contains('products')) {
+          const s = db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('name', 'name');
+          s.createIndex('category', 'category');
+        }
+        if (!db.objectStoreNames.contains('stockMovements')) {
+          const s = db.createObjectStore('stockMovements', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('productId', 'productId');
+        }
+        if (!db.objectStoreNames.contains('customers')) {
+          const s = db.createObjectStore('customers', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('name', 'name');
+        }
+        if (!db.objectStoreNames.contains('sales')) {
+          const s = db.createObjectStore('sales', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('date', 'date');
+          s.createIndex('customerId', 'customerId');
+        }
+        if (!db.objectStoreNames.contains('payments')) {
+          const s = db.createObjectStore('payments', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('customerId', 'customerId');
+          s.createIndex('saleId', 'saleId');
+        }
+        if (!db.objectStoreNames.contains('expenses')) {
+          const s = db.createObjectStore('expenses', { keyPath: 'id', autoIncrement: true });
+          s.createIndex('date', 'date');
+        }
+        if (!db.objectStoreNames.contains('meta')) {
+          db.createObjectStore('meta', { keyPath: 'key' });
+        }
+      };
+      req.onsuccess = function () {
+        const db = req.result;
+        db.onversionchange = function () { db.close(); dbPromise = null; };
+        resolve(db);
+      };
+      req.onerror = function () { reject(req.error || new Error('Could not open the database.')); };
+      req.onblocked = function () { reject(new Error('Database is blocked by another open tab. Close other tabs and reload.')); };
+    });
+    return dbPromise;
+  }
+
+  const wrap = (r) => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+
+  // Run fn(stores) inside one readwrite transaction. Throwing / rejecting aborts everything.
+  async function transact(storeNames, mode, fn) {
+    const db = await open();
+    return new Promise(function (resolve, reject) {
+      let tx;
+      try { tx = db.transaction(storeNames, mode); } catch (e) { return reject(e); }
+      const stores = {};
+      storeNames.forEach(function (n) {
+        const s = tx.objectStore(n);
+        stores[n] = {
+          get: (k) => wrap(s.get(k)),
+          getAll: () => wrap(s.getAll()),
+          getAllByIndex: (idx, key) => wrap(s.index(idx).getAll(key)),
+          add: (v) => wrap(s.add(v)),
+          put: (v) => wrap(s.put(v)),
+          delete: (k) => wrap(s.delete(k)),
+          clear: () => wrap(s.clear()),
+        };
+      });
+      let result, failed = null;
+      tx.oncomplete = function () { resolve(result); };
+      tx.onerror = function () { reject(failed || tx.error); };
+      tx.onabort = function () { reject(failed || tx.error || new Error('Transaction aborted')); };
+      Promise.resolve().then(() => fn(stores)).then(function (r) { result = r; }, function (e) {
+        failed = e;
+        try { tx.abort(); } catch (_) { /* already finished */ }
+      });
+    });
+  }
+
+  async function getAll(store) { return transact([store], 'readonly', (s) => s[store].getAll()); }
+  async function get(store, key) { return transact([store], 'readonly', (s) => s[store].get(key)); }
+  async function getMeta(key, fallback) {
+    const r = await get('meta', key);
+    return r ? r.value : fallback;
+  }
+  async function setMeta(key, value) { return transact(['meta'], 'readwrite', (s) => s.meta.put({ key: key, value: value })); }
+
+  // Load everything (used by analytics & backup)
+  async function loadAll() {
+    return transact(STORES.filter((n) => n !== 'meta'), 'readonly', async function (s) {
+      const out = {};
+      for (const n of Object.keys(s)) out[n] = await s[n].getAll();
+      return out;
+    });
+  }
+
+  window.MZ = window.MZ || {};
+  window.MZ.DB = { open, transact, getAll, get, getMeta, setMeta, loadAll, STORES, DB_NAME, DB_VERSION };
+})();
+
+</script>
+  <script>
+/* inventory.js — products, purchases, stock adjustments, history. */
+(function () {
+  'use strict';
+  const U = MZ.U, DB = MZ.DB;
+  const fail = (m) => { const e = new Error(m); e.userMessage = m; throw e; };
+
+  function readProductForm(d) {
+    const name = U.validText(d.name, 'Product name', 100); if (!name.ok) fail(name.error);
+    const cost = U.validMoney(d.costPrice, 'Purchase cost', { allowZero: true }); if (!cost.ok) fail(cost.error);
+    const price = U.validMoney(d.sellPrice, 'Selling price'); if (!price.ok) fail(price.error);
+    const low = U.validQty(d.lowStock === '' || d.lowStock == null ? 0 : d.lowStock, 'Low-stock level', { allowZero: true });
+    if (!low.ok) fail(low.error);
+    return {
+      name: name.value,
+      category: U.clean(d.category) || 'General',
+      unit: U.clean(d.unit) || 'pcs',
+      costPrice: cost.value, sellPrice: price.value, lowStock: low.value,
+    };
+  }
+
+  // Create (id == null) or edit a product. Quantity on create = opening stock.
+  async function saveProduct(d, id) {
+    const f = readProductForm(d);
+    let openQty = 0;
+    if (id == null) {
+      const q = U.validQty(d.qty === '' || d.qty == null ? 0 : d.qty, 'Opening quantity', { allowZero: true });
+      if (!q.ok) fail(q.error);
+      openQty = q.value;
+    }
+    return DB.transact(['products', 'stockMovements'], 'readwrite', async function (s) {
+      const all = await s.products.getAll();
+      const dup = all.find((p) => p.id !== id && p.name.toLowerCase() === f.name.toLowerCase());
+      if (dup) fail('A product named "' + dup.name + '" already exists.');
+      const now = U.nowISO();
+      if (id == null) {
+        const rec = Object.assign({ qty: openQty, archived: false, createdAt: now, updatedAt: now }, f);
+        const newId = await s.products.add(rec);
+        if (openQty > 0) {
+          await s.stockMovements.add({
+            productId: newId, type: 'opening', qtyChange: openQty, qtyAfter: openQty, unitCost: f.costPrice,
+            date: U.today(), note: 'Opening stock', createdAt: now,
+          });
+        }
+        return newId;
+      }
+      const cur = await s.products.get(id);
+      if (!cur) fail('Product not found.');
+      await s.products.put(Object.assign({}, cur, f, { updatedAt: now }));
+      return id;
+    });
+  }
+
+  async function setArchived(id, archived) {
+    return DB.transact(['products'], 'readwrite', async function (s) {
+      const p = await s.products.get(id);
+      if (!p) fail('Product not found.');
+      p.archived = !!archived; p.updatedAt = U.nowISO();
+      await s.products.put(p);
+    });
+  }
+
+  // Purchase: adds stock and updates weighted-average cost.
+  async function addPurchase(d) {
+    const q = U.validQty(d.qty, 'Quantity'); if (!q.ok) fail(q.error);
+    const c = U.validMoney(d.unitCost, 'Unit cost', { allowZero: true }); if (!c.ok) fail(c.error);
+    const dt = U.validDate(d.date, 'Date'); if (!dt.ok) fail(dt.error);
+    return DB.transact(['products', 'stockMovements'], 'readwrite', async function (s) {
+      const p = await s.products.get(Number(d.productId));
+      if (!p) fail('Product not found.');
+      const newQty = Math.round((p.qty + q.value) * 1000) / 1000;
+      const avg = newQty > 0 ? (p.qty * p.costPrice + q.value * c.value) / newQty : c.value;
+      const now = U.nowISO();
+      p.qty = newQty; p.costPrice = U.round2(avg); p.updatedAt = now;
+      await s.products.put(p);
+      await s.stockMovements.add({
+        productId: p.id, type: 'purchase', qtyChange: q.value, qtyAfter: newQty, unitCost: c.value,
+        date: dt.value, supplier: U.clean(d.supplier), note: U.clean(d.note), createdAt: now,
+      });
+      return p.id;
+    });
+  }
+
+  // Adjustment: signed change (e.g. damaged = -2, found = +1). Cannot go below zero.
+  async function adjustStock(d) {
+    const raw = U.parseNum(d.change);
+    if (isNaN(raw) || raw === 0) fail('Enter a quantity change (use a minus sign to reduce stock).');
+    if (Math.abs(raw * 1000 - Math.round(raw * 1000)) > 1e-6) fail('Quantity can have at most 3 decimal places.');
+    const reason = U.validText(d.reason, 'Reason', 200); if (!reason.ok) fail(reason.error);
+    return DB.transact(['products', 'stockMovements'], 'readwrite', async function (s) {
+      const p = await s.products.get(Number(d.productId));
+      if (!p) fail('Product not found.');
+      const newQty = Math.round((p.qty + raw) * 1000) / 1000;
+      if (newQty < 0) fail('Stock cannot go below zero. Current stock is ' + U.qty(p.qty) + '.');
+      const now = U.nowISO();
+      p.qty = newQty; p.updatedAt = now;
+      await s.products.put(p);
+      await s.stockMovements.add({
+        productId: p.id, type: 'adjustment', qtyChange: Math.round(raw * 1000) / 1000, qtyAfter: newQty,
+        unitCost: p.costPrice, date: U.today(), note: reason.value, createdAt: now,
+      });
+    });
+  }
+
+  async function history(productId) {
+    const rows = await DB.transact(['stockMovements'], 'readonly', (s) => s.stockMovements.getAllByIndex('productId', productId));
+    return rows.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  }
+
+  const listProducts = () => DB.getAll('products');
+
+  MZ.Inventory = { saveProduct, setArchived, addPurchase, adjustStock, history, listProducts };
+})();
+
+</script>
+  <script>
+/* customers.js — customers, payments, balances. */
+(function () {
+  'use strict';
+  const U = MZ.U, DB = MZ.DB;
+  const fail = (m) => { const e = new Error(m); e.userMessage = m; throw e; };
+
+  async function saveCustomer(d, id) {
+    const name = U.validText(d.name, 'Customer name', 100); if (!name.ok) fail(name.error);
+    const ph = U.validPhone(d.phone); if (!ph.ok) fail(ph.error);
+    return DB.transact(['customers'], 'readwrite', async function (s) {
+      const all = await s.customers.getAll();
+      if (ph.value && all.some((c) => c.id !== id && c.phone === ph.value)) fail('Another customer already uses this phone number.');
+      const now = U.nowISO();
+      if (id == null) {
+        return s.customers.add({ name: name.value, phone: ph.value, address: U.clean(d.address), createdAt: now, updatedAt: now });
+      }
+      const cur = await s.customers.get(id);
+      if (!cur) fail('Customer not found.');
+      await s.customers.put(Object.assign({}, cur, { name: name.value, phone: ph.value, address: U.clean(d.address), updatedAt: now }));
+      return id;
+    });
+  }
+
+  // Customers with computed balance (total sales - total payments)
+  async function listWithBalances() {
+    const all = await DB.transact(['customers', 'sales', 'payments'], 'readonly', async function (s) {
+      return { c: await s.customers.getAll(), s: await s.sales.getAll(), p: await s.payments.getAll() };
+    });
+    return all.c.map(function (c) {
+      const sales = all.s.filter((x) => x.customerId === c.id);
+      const pays = all.p.filter((x) => x.customerId === c.id);
+      const total = sales.reduce((a, x) => a + x.total, 0);
+      const paid = pays.reduce((a, x) => a + x.amount, 0);
+      return Object.assign({}, c, { totalSales: U.round2(total), totalPaid: U.round2(paid), balance: U.round2(total - paid), saleCount: sales.length });
+    });
+  }
+
+  async function detail(id) {
+    return DB.transact(['customers', 'sales', 'payments'], 'readonly', async function (s) {
+      const c = await s.customers.get(id);
+      if (!c) fail('Customer not found.');
+      const sales = (await s.sales.getAllByIndex('customerId', id)).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+      const payments = (await s.payments.getAllByIndex('customerId', id)).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+      const total = sales.reduce((a, x) => a + x.total, 0), paid = payments.reduce((a, x) => a + x.amount, 0);
+      return { customer: c, sales, payments, balance: U.round2(total - paid), totalSales: U.round2(total), totalPaid: U.round2(paid) };
+    });
+  }
+
+  // Receive a payment: applied to the oldest unpaid sales first. Cannot exceed what is owed.
+  async function receivePayment(customerId, amountRaw, date, note) {
+    const a = U.validMoney(amountRaw, 'Payment amount'); if (!a.ok) fail(a.error);
+    const dt = U.validDate(date, 'Date'); if (!dt.ok) fail(dt.error);
+    return DB.transact(['sales', 'payments', 'customers'], 'readwrite', async function (s) {
+      const c = await s.customers.get(customerId);
+      if (!c) fail('Customer not found.');
+      const sales = (await s.sales.getAllByIndex('customerId', customerId)).filter((x) => x.due > 0)
+        .sort((x, y) => (x.createdAt < y.createdAt ? -1 : 1));
+      const owed = U.round2(sales.reduce((t, x) => t + x.due, 0));
+      if (owed <= 0) fail('This customer has no outstanding balance.');
+      if (a.value > owed) fail('Payment (' + U.money(a.value) + ') is more than the amount owed (' + U.money(owed) + ').');
+      let left = a.value; const now = U.nowISO();
+      for (const sale of sales) {
+        if (left <= 0) break;
+        const part = U.round2(Math.min(left, sale.due));
+        sale.paid = U.round2(sale.paid + part); sale.due = U.round2(sale.total - sale.paid);
+        await s.sales.put(sale);
+        await s.payments.add({ customerId, saleId: sale.id, amount: part, date: dt.value, note: U.clean(note), kind: 'later', createdAt: now });
+        left = U.round2(left - part);
+      }
+      return a.value;
+    });
+  }
+
+  MZ.Customers = { saveCustomer, listWithBalances, detail, receivePayment };
+})();
+
+</script>
+  <script>
+/* sales.js — record a sale atomically: check stock, deduct stock, save sale, save payment. */
+(function () {
+  'use strict';
+  const U = MZ.U, DB = MZ.DB;
+  const fail = (m) => { const e = new Error(m); e.userMessage = m; throw e; };
+
+  /*
+   input: { date, customerId|null, discount, paid, note, items:[{productId, qty, unitPrice}] }
+   Walk-in sales (no customer) must be paid in full — there is nobody to collect a due from.
+  */
+  async function recordSale(input) {
+    const dt = U.validDate(input.date, 'Date'); if (!dt.ok) fail(dt.error);
+    if (!input.items || !input.items.length) fail('Add at least one product to the sale.');
+    const items = [];
+    const seen = {};
+    input.items.forEach(function (it, i) {
+      const q = U.validQty(it.qty, 'Quantity (item ' + (i + 1) + ')'); if (!q.ok) fail(q.error);
+      const p = U.validMoney(it.unitPrice, 'Selling price (item ' + (i + 1) + ')', { allowZero: true }); if (!p.ok) fail(p.error);
+      const pid = Number(it.productId);
+      if (!pid) fail('Choose a product for item ' + (i + 1) + '.');
+      if (seen[pid]) fail('The same product is added twice. Combine the quantities into one line.');
+      seen[pid] = true;
+      items.push({ productId: pid, qty: q.value, unitPrice: p.value });
+    });
+    const disc = U.validMoney(input.discount === '' || input.discount == null ? 0 : input.discount, 'Discount', { allowZero: true });
+    if (!disc.ok) fail(disc.error);
+    const customerId = input.customerId ? Number(input.customerId) : null;
+
+    return DB.transact(['products', 'stockMovements', 'customers', 'sales', 'payments', 'meta'], 'readwrite', async function (s) {
+      let customer = null;
+      if (customerId) { customer = await s.customers.get(customerId); if (!customer) fail('Customer not found.'); }
+      const lines = []; let subtotal = 0, cost = 0;
+      const now = U.nowISO();
+      const updated = [];
+      for (const it of items) {
+        const p = await s.products.get(it.productId);
+        if (!p) fail('A selected product no longer exists.');
+        if (p.archived) fail('"' + p.name + '" is archived and cannot be sold.');
+        if (it.qty > p.qty) fail('Not enough stock for "' + p.name + '". Available: ' + U.qty(p.qty) + ' ' + p.unit + '.');
+        const lineTotal = U.round2(it.qty * it.unitPrice);
+        const lineCost = U.round2(it.qty * p.costPrice);
+        subtotal += lineTotal; cost += lineCost;
+        lines.push({ productId: p.id, name: p.name, unit: p.unit, qty: it.qty, unitPrice: it.unitPrice, unitCost: p.costPrice, lineTotal: lineTotal, lineProfit: U.round2(lineTotal - lineCost) });
+        updated.push({ p: p, qty: it.qty });
+      }
+      subtotal = U.round2(subtotal);
+      if (disc.value > subtotal) fail('Discount cannot be more than the sale total.');
+      const total = U.round2(subtotal - disc.value);
+      const profit = U.round2(total - cost);
+
+      let paidRaw = input.paid === '' || input.paid == null ? total : input.paid;
+      const pd = U.validMoney(paidRaw, 'Amount paid', { allowZero: true }); if (!pd.ok) fail(pd.error);
+      if (pd.value > total) fail('Amount paid (' + U.money(pd.value) + ') is more than the sale total (' + U.money(total) + ').');
+      if (!customer && pd.value < total) fail('Choose a customer to record a partly paid sale. Walk-in sales must be paid in full.');
+
+      const counterRec = await s.meta.get('invoiceCounter');
+      const counter = (counterRec ? counterRec.value : 0) + 1;
+      await s.meta.put({ key: 'invoiceCounter', value: counter });
+      const invoiceNo = 'INV-' + String(counter).padStart(5, '0');
+
+      const sale = {
+        invoiceNo: invoiceNo, date: dt.value, customerId: customer ? customer.id : null,
+        customerName: customer ? customer.name : 'Walk-in customer', customerPhone: customer ? customer.phone : '',
+        items: lines, subtotal: subtotal, discount: disc.value, total: total, cost: U.round2(cost), profit: profit,
+        paid: pd.value, due: U.round2(total - pd.value), note: U.clean(input.note), createdAt: now,
+      };
+      const saleId = await s.sales.add(sale);
+
+      for (const u of updated) {
+        const newQty = Math.round((u.p.qty - u.qty) * 1000) / 1000;
+        if (newQty < 0) fail('Stock would go negative for "' + u.p.name + '".'); // safety net
+        u.p.qty = newQty; u.p.updatedAt = now;
+        await s.products.put(u.p);
+        await s.stockMovements.add({
+          productId: u.p.id, type: 'sale', qtyChange: -u.qty, qtyAfter: newQty, unitCost: u.p.costPrice,
+          date: dt.value, note: invoiceNo, refId: saleId, createdAt: now,
+        });
+      }
+      if (pd.value > 0 && customer) {
+        await s.payments.add({ customerId: customer.id, saleId: saleId, amount: pd.value, date: dt.value, note: 'Paid at sale ' + invoiceNo, kind: 'at-sale', createdAt: now });
+      }
+      sale.id = saleId;
+      return sale;
+    });
+  }
+
+  const listSales = async () => (await DB.getAll('sales')).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const getSale = (id) => DB.get('sales', id);
+
+  MZ.Sales = { recordSale, listSales, getSale };
+})();
+
+</script>
+  <script>
+/* expenses.js — daily expenses. */
+(function () {
+  'use strict';
+  const U = MZ.U, DB = MZ.DB;
+  const fail = (m) => { const e = new Error(m); e.userMessage = m; throw e; };
+  const CATEGORIES = ['Shop rent', 'Staff salary', 'Electricity', 'Transport', 'Shop supplies', 'Repairs', 'Marketing', 'Tea & snacks', 'Other'];
+
+  function read(d) {
+    const dt = U.validDate(d.date, 'Date'); if (!dt.ok) fail(dt.error);
+    const a = U.validMoney(d.amount, 'Amount'); if (!a.ok) fail(a.error);
+    const cat = U.clean(d.category);
+    if (!cat) fail('Choose a category.');
+    return { date: dt.value, amount: a.value, category: cat, note: U.clean(d.note) };
+  }
+  async function saveExpense(d, id) {
+    const f = read(d);
+    return DB.transact(['expenses'], 'readwrite', async function (s) {
+      const now = U.nowISO();
+      if (id == null) return s.expenses.add(Object.assign({ createdAt: now, updatedAt: now }, f));
+      const cur = await s.expenses.get(id);
+      if (!cur) fail('Expense not found.');
+      await s.expenses.put(Object.assign({}, cur, f, { updatedAt: now }));
+      return id;
+    });
+  }
+  const deleteExpense = (id) => DB.transact(['expenses'], 'readwrite', (s) => s.expenses.delete(id));
+  const listExpenses = async () => (await DB.getAll('expenses')).sort((a, b) => (a.date === b.date ? (a.createdAt < b.createdAt ? 1 : -1) : a.date < b.date ? 1 : -1));
+
+  MZ.Expenses = { saveExpense, deleteExpense, listExpenses, CATEGORIES };
+})();
+
+</script>
+  <script>
+/* analytics.js — pure functions over stored records (unit-tested in Node).
+   data = { products, sales, expenses, payments, stockMovements } */
+(function (root) {
+  'use strict';
+  const U = root.MZ && root.MZ.U ? root.MZ.U : require('./utils.js');
+  const A = {};
+  const sum = (arr, f) => U.round2(arr.reduce((t, x) => t + f(x), 0));
+
+  A.inventoryValue = (products) => sum(products.filter((p) => p.qty > 0), (p) => p.qty * p.costPrice);
+  A.totalDues = (sales) => sum(sales, (s) => s.due);
+  A.lowStock = (products) => products
+    .filter((p) => !p.archived && p.qty <= p.lowStock && p.lowStock > 0)
+    .sort((a, b) => a.qty - b.qty);
+
+  // Aggregate product performance from sale lines
+  A.productStats = function (sales) {
+    const m = {};
+    sales.forEach(function (s) {
+      s.items.forEach(function (it) {
+        const r = m[it.productId] || (m[it.productId] = { productId: it.productId, name: it.name, qty: 0, revenue: 0, profit: 0 });
+        r.qty += it.qty; r.revenue += it.lineTotal; r.profit += it.lineProfit;
+      });
+    });
+    return Object.values(m).map((r) => ({ productId: r.productId, name: r.name, qty: Math.round(r.qty * 1000) / 1000, revenue: U.round2(r.revenue), profit: U.round2(r.profit) }));
+  };
+  A.bestSelling = (sales, n) => A.productStats(sales).sort((a, b) => b.qty - a.qty).slice(0, n || 5);
+  A.mostProfitable = (sales, n) => A.productStats(sales).sort((a, b) => b.profit - a.profit).slice(0, n || 5);
+
+  // Totals for a date range [from, to] inclusive
+  A.totals = function (data, from, to) {
+    const inR = (d) => d >= from && d <= to;
+    const sales = data.sales.filter((s) => inR(s.date));
+    const exps = data.expenses.filter((e) => inR(e.date));
+    const salesTotal = sum(sales, (s) => s.total);
+    const gross = sum(sales, (s) => s.profit);
+    const expenses = sum(exps, (e) => e.amount);
+    return { count: sales.length, sales: salesTotal, gross: gross, expenses: expenses, net: U.round2(gross - expenses), collected: sum(sales, (s) => s.paid), due: sum(sales, (s) => s.due) };
+  };
+
+  A.monthlySeries = function (data, endMonthKey, months) {
+    const out = [];
+    let y = Number(endMonthKey.slice(0, 4)), m = Number(endMonthKey.slice(5, 7));
+    const keys = [];
+    for (let i = 0; i < months; i++) {
+      keys.unshift(y + '-' + String(m).padStart(2, '0'));
+      m--; if (m === 0) { m = 12; y--; }
+    }
+    keys.forEach(function (k) {
+      const t = A.totals(data, k + '-01', k + '-31');
+      out.push({ key: k, label: U.monthLabel(k), sales: t.sales, gross: t.gross, expenses: t.expenses, net: t.net });
+    });
+    return out;
+  };
+
+  A.dashboard = function (data, today) {
+    const t = A.totals(data, today, today);
+    const mk = U.monthKey(today);
+    const month = A.totals(data, mk + '-01', mk + '-31');
+    const last30 = data.sales.filter((s) => s.date >= U.addDays(today, -29) && s.date <= today);
+    return {
+      todaySales: t.sales, todayGross: t.gross, todayCount: t.count,
+      inventoryValue: A.inventoryValue(data.products),
+      dues: A.totalDues(data.sales),
+      bestSelling: A.bestSelling(last30, 5),
+      recent: data.sales.slice().sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 8),
+      lowStock: A.lowStock(data.products),
+      series: A.monthlySeries(data, mk, 6),
+      month: month,
+    };
+  };
+
+  // Group by day / week / month between from..to
+  A.report = function (data, from, to, groupBy) {
+    const keyOf = (d) => groupBy === 'month' ? U.monthKey(d) : groupBy === 'week' ? U.weekStart(d) : d;
+    const buckets = {};
+    const get = (k) => buckets[k] || (buckets[k] = { key: k, sales: 0, gross: 0, expenses: 0, count: 0 });
+    data.sales.filter((s) => s.date >= from && s.date <= to).forEach(function (s) {
+      const b = get(keyOf(s.date)); b.sales += s.total; b.gross += s.profit; b.count++;
+    });
+    data.expenses.filter((e) => e.date >= from && e.date <= to).forEach(function (e) { get(keyOf(e.date)).expenses += e.amount; });
+    const rows = Object.values(buckets).sort((a, b) => (a.key < b.key ? -1 : 1)).map(function (b) {
+      return { key: b.key, label: groupBy === 'month' ? U.monthLabel(b.key) : groupBy === 'week' ? 'Week of ' + U.formatDate(b.key) : U.formatDate(b.key),
+        sales: U.round2(b.sales), gross: U.round2(b.gross), expenses: U.round2(b.expenses), net: U.round2(b.gross - b.expenses), count: b.count };
+    });
+    // previous period of the same length, for comparison
+    const days = Math.round((new Date(to + 'T00:00:00') - new Date(from + 'T00:00:00')) / 86400000) + 1;
+    const prevTo = U.addDays(from, -1), prevFrom = U.addDays(from, -days);
+    const rangeSales = data.sales.filter((s) => s.date >= from && s.date <= to);
+    const expByCat = {};
+    data.expenses.filter((e) => e.date >= from && e.date <= to).forEach((e) => { expByCat[e.category] = (expByCat[e.category] || 0) + e.amount; });
+    return {
+      rows: rows, totals: A.totals(data, from, to), previous: A.totals(data, prevFrom, prevTo), prevRange: [prevFrom, prevTo],
+      bestSelling: A.bestSelling(rangeSales, 10), mostProfitable: A.mostProfitable(rangeSales, 10),
+      expenseByCategory: Object.keys(expByCat).map((k) => ({ category: k, amount: U.round2(expByCat[k]) })).sort((a, b) => b.amount - a.amount),
+    };
+  };
+
+  A.valuationRows = (products) => products.filter((p) => p.qty > 0)
+    .map((p) => ({ id: p.id, name: p.name, category: p.category, qty: p.qty, unit: p.unit, cost: p.costPrice, value: U.round2(p.qty * p.costPrice), retail: U.round2(p.qty * p.sellPrice), archived: p.archived }))
+    .sort((a, b) => b.value - a.value);
+
+  root.MZ = root.MZ || {};
+  root.MZ.Analytics = A;
+  if (typeof module !== 'undefined' && module.exports) module.exports = A;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* backup.js — manual JSON export / import (replace-all) with validation. */
+(function () {
+  'use strict';
+  const U = MZ.U, DB = MZ.DB;
+  const APP = 'MizanBusinessMonitor';
+  const FORMAT = 1;
+  const DATA_STORES = ['products', 'stockMovements', 'customers', 'sales', 'payments', 'expenses'];
+  const fail = (m) => { const e = new Error(m); e.userMessage = m; throw e; };
+
+  async function buildExport() {
+    const data = await DB.loadAll();
+    const invoiceCounter = await DB.getMeta('invoiceCounter', 0);
+    const payload = { stores: {}, invoiceCounter: invoiceCounter };
+    DATA_STORES.forEach((n) => { payload.stores[n] = data[n] || []; });
+    const body = JSON.stringify(payload);
+    const exportId = U.uid();
+    const file = {
+      app: APP, format: FORMAT, shop: 'MIZAN SOLAR AND ELECTRONICS',
+      exportId: exportId, exportedAt: U.nowISO(),
+      counts: {}, checksum: U.checksum(body), payload: payload,
+    };
+    DATA_STORES.forEach((n) => { file.counts[n] = payload.stores[n].length; });
+    return file;
+  }
+
+  async function exportToFile() {
+    const file = await buildExport();
+    const blob = new Blob([JSON.stringify(file, null, 1)], { type: 'application/json' });
+    const name = 'mizan-backup-' + U.today() + '-' + new Date().toTimeString().slice(0, 5).replace(':', '') + '.json';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    await DB.setMeta('lastExport', { at: file.exportedAt, id: file.exportId });
+    return { name: name, counts: file.counts };
+  }
+
+  // Strict validation of a parsed backup. Returns the file or throws a plain-English error.
+  function validate(file) {
+    if (!file || typeof file !== 'object') fail('This is not a valid backup file.');
+    if (file.app !== APP) fail('This file was not created by Mizan Business Monitor.');
+    if (file.format !== FORMAT) fail('This backup was made by a different version and cannot be read.');
+    if (!file.payload || !file.payload.stores) fail('The backup file is missing its data.');
+    const body = JSON.stringify(file.payload);
+    if (U.checksum(body) !== file.checksum) fail('The backup file is damaged or was edited (checksum mismatch). Nothing was changed.');
+    const st = file.payload.stores;
+    DATA_STORES.forEach(function (n) {
+      if (!Array.isArray(st[n])) fail('The backup is missing "' + n + '" records.');
+      st[n].forEach(function (r, i) {
+        if (!r || typeof r !== 'object' || typeof r.id !== 'number') fail('Record ' + (i + 1) + ' in "' + n + '" is invalid.');
+      });
+    });
+    st.sales.forEach(function (s) {
+      if (!Array.isArray(s.items) || typeof s.total !== 'number' || typeof s.paid !== 'number' || typeof s.due !== 'number') fail('A sale record in the backup is invalid.');
+    });
+    st.products.forEach(function (p) {
+      if (typeof p.qty !== 'number' || p.qty < 0) fail('A product in the backup has an invalid quantity.');
+    });
+    return file;
+  }
+
+  async function readFile(fileObj) {
+    let text;
+    try { text = await fileObj.text(); } catch (e) { fail('Could not read the selected file.'); }
+    let parsed;
+    try { parsed = JSON.parse(text); } catch (e) { fail('The selected file is not valid JSON. Choose a Mizan backup file.'); }
+    validate(parsed);
+    const imported = await DB.getMeta('importedIds', []);
+    const dup = imported.find((x) => x.id === parsed.exportId) || null;
+    const cur = await DB.loadAll();
+    const currentCounts = {};
+    DATA_STORES.forEach((n) => { currentCounts[n] = cur[n].length; });
+    return { file: parsed, duplicate: dup, currentCounts: currentCounts };
+  }
+
+  // Replace ALL current records with the backup's records, in one transaction.
+  async function importFile(file) {
+    validate(file);
+    const imported = await DB.getMeta('importedIds', []);
+    await DB.transact(DATA_STORES.concat(['meta']), 'readwrite', async function (s) {
+      for (const n of DATA_STORES) {
+        await s[n].clear();
+        for (const r of file.payload.stores[n]) await s[n].put(r);
+      }
+      await s.meta.put({ key: 'invoiceCounter', value: file.payload.invoiceCounter || 0 });
+      const list = await s.meta.get('importedIds');
+      const arr = list ? list.value : imported;
+      arr.push({ id: file.exportId, at: U.nowISO(), exportedAt: file.exportedAt });
+      await s.meta.put({ key: 'importedIds', value: arr.slice(-200) });
+    });
+    return file.counts;
+  }
+
+  MZ.Backup = { exportToFile, buildExport, readFile, importFile, validate, DATA_STORES };
+})();
+
+</script>
+  <script>
+/* charts.js — tiny dependency-free canvas charts (bar & line), works fully offline. */
+(function () {
+  'use strict';
+  const GREEN = '#14532d', BLUE = '#3b6ea5', AMBER = '#b7791f', GRID = '#e5e9e6', TEXT = '#44514a';
+
+  function nice(max) {
+    if (max <= 0) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(max)));
+    const f = max / p;
+    const n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10;
+    return n * p;
+  }
+  function short(v) {
+    const a = Math.abs(v);
+    if (a >= 1e7) return (v / 1e7).toFixed(1).replace(/\.0$/, '') + 'Cr';
+    if (a >= 1e5) return (v / 1e5).toFixed(1).replace(/\.0$/, '') + 'L';
+    if (a >= 1e3) return (v / 1e3).toFixed(1).replace(/\.0$/, '') + 'k';
+    return String(Math.round(v));
+  }
+
+  /* cfg: { type:'bar'|'line', labels:[], series:[{name, values:[], color}] } */
+  function draw(canvas, cfg) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth || 300, h = canvas.clientHeight || 220;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    const c = canvas.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+    c.font = '12px system-ui, sans-serif';
+
+    const series = cfg.series.map((s, i) => Object.assign({ color: [GREEN, BLUE, AMBER][i % 3] }, s));
+    const all = [].concat.apply([], series.map((s) => s.values));
+    const hasData = all.some((v) => v !== 0);
+    let min = Math.min(0, ...all), max = Math.max(0, ...all);
+    if (!hasData) { max = 1; }
+    const top = nice(max), bottom = min < 0 ? -nice(-min) : 0;
+    const legendH = series.length > 1 ? 22 : 4;
+    const L = 44, R = 8, T = 8 + legendH, B = 24;
+    const pw = w - L - R, ph = h - T - B;
+    const y = (v) => T + ph - ((v - bottom) / (top - bottom)) * ph;
+
+    // grid + y labels
+    c.strokeStyle = GRID; c.fillStyle = TEXT; c.lineWidth = 1; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let i = 0; i <= 4; i++) {
+      const v = bottom + ((top - bottom) * i) / 4, yy = y(v);
+      c.beginPath(); c.moveTo(L, yy); c.lineTo(w - R, yy); c.stroke();
+      c.fillText(short(v), L - 6, yy);
+    }
+    // x labels
+    const n = cfg.labels.length;
+    const slot = pw / Math.max(n, 1);
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    const every = Math.ceil(n / Math.max(1, Math.floor(pw / 60)));
+    cfg.labels.forEach((lb, i) => { if (i % every === 0) c.fillText(lb, L + slot * i + slot / 2, h - B + 6); });
+
+    if (cfg.type === 'line') {
+      series.forEach(function (s) {
+        c.strokeStyle = s.color; c.fillStyle = s.color; c.lineWidth = 2.5; c.beginPath();
+        s.values.forEach((v, i) => { const x = L + slot * i + slot / 2; i ? c.lineTo(x, y(v)) : c.moveTo(x, y(v)); });
+        c.stroke();
+        s.values.forEach((v, i) => { c.beginPath(); c.arc(L + slot * i + slot / 2, y(v), 3.5, 0, 7); c.fill(); });
+      });
+    } else {
+      const gw = slot * 0.7, bw = gw / series.length;
+      series.forEach(function (s, si) {
+        c.fillStyle = s.color;
+        s.values.forEach(function (v, i) {
+          const x = L + slot * i + (slot - gw) / 2 + bw * si;
+          const y0 = y(0), y1 = y(v);
+          c.fillRect(x, Math.min(y0, y1), Math.max(bw - 2, 2), Math.max(Math.abs(y0 - y1), v !== 0 ? 1 : 0));
+        });
+      });
+    }
+    // zero line
+    c.strokeStyle = '#9aa7a0'; c.beginPath(); c.moveTo(L, y(0)); c.lineTo(w - R, y(0)); c.stroke();
+
+    if (series.length > 1) {
+      let x = L; c.textAlign = 'left'; c.textBaseline = 'middle';
+      series.forEach(function (s) {
+        c.fillStyle = s.color; c.fillRect(x, 8, 12, 12);
+        c.fillStyle = TEXT; c.fillText(s.name, x + 16, 14);
+        x += 16 + c.measureText(s.name).width + 16;
+      });
+    }
+    if (!hasData) {
+      c.fillStyle = '#7b8a82'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('No data yet', L + pw / 2, T + ph / 2);
+    }
+  }
+
+  // Redraw on resize
+  const registry = new Set();
+  function mount(canvas, cfg) {
+    const item = { canvas: canvas, cfg: cfg };
+    registry.add(item);
+    draw(canvas, cfg);
+  }
+  let t;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(function () {
+      registry.forEach(function (it) { if (document.body.contains(it.canvas)) draw(it.canvas, it.cfg); else registry.delete(it); });
+    }, 150);
+  });
+
+  MZ.Charts = { mount: mount, draw: draw };
+})();
+
+</script>
+  <script>
+/* ui.js — dialog, toast, confirm, form helpers. */
+(function () {
+  'use strict';
+  const U = MZ.U;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const dlg = () => document.getElementById('dlg');
+
+  let toastTimer;
+  function toast(msg, bad) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = bad ? 'bad' : '';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.add('hidden'), bad ? 6000 : 3000);
+  }
+  const errText = (e) => (e && e.userMessage) || 'Something went wrong: ' + ((e && e.message) || e) + '. Your data was not changed.';
+
+  function closeDialog() { const d = dlg(); if (d.open) d.close(); d.innerHTML = ''; }
+
+  /* modal({title, body, submitLabel, onSubmit(formEl) -> promise, wide, hideFooter, extraButtons}) */
+  function modal(o) {
+    const d = dlg();
+    d.className = o.wide ? 'wide' : '';
+    d.innerHTML =
+      '<form method="dialog" novalidate id="dlgform">' +
+      '<div class="dlg-head"><h3>' + U.esc(o.title) + '</h3><button type="button" class="x secondary" data-close aria-label="Close">✕</button></div>' +
+      '<div class="dlg-body">' + o.body + '<div id="dlgerr"></div></div>' +
+      '<div class="dlg-foot">' +
+      (o.extraButtons || '') +
+      '<button type="button" class="secondary" data-close>' + (o.onSubmit ? 'Cancel' : 'Close') + '</button>' +
+      (o.onSubmit ? '<button type="submit" id="dlgok">' + U.esc(o.submitLabel || 'Save') + '</button>' : '') +
+      '</div></form>';
+    const form = d.querySelector('form');
+    d.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', closeDialog));
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!o.onSubmit) return;
+      const ok = document.getElementById('dlgok'); ok.disabled = true;
+      document.getElementById('dlgerr').innerHTML = '';
+      try {
+        const keep = await o.onSubmit(form);
+        if (keep !== false) closeDialog();
+      } catch (err) {
+        document.getElementById('dlgerr').innerHTML = '<div class="err" role="alert">' + U.esc(errText(err)) + '</div>';
+        if (!err.userMessage) console.error(err);
+        ok.disabled = false;
+      }
+    });
+    if (!d.open) d.showModal();
+    if (o.onOpen) o.onOpen(d);
+    return d;
+  }
+
+  function confirmBox(title, message, okLabel, danger) {
+    return new Promise(function (resolve) {
+      const d = dlg();
+      d.className = '';
+      d.innerHTML =
+        '<form method="dialog"><div class="dlg-head"><h3>' + U.esc(title) + '</h3></div>' +
+        '<div class="dlg-body"><div style="padding-top:12px">' + message + '</div></div>' +
+        '<div class="dlg-foot"><button type="button" class="secondary" id="cNo">Cancel</button>' +
+        '<button type="button" class="' + (danger ? 'danger' : '') + '" id="cYes">' + U.esc(okLabel || 'Yes') + '</button></div></form>';
+      const done = (v) => { closeDialog(); resolve(v); };
+      d.querySelector('#cNo').onclick = () => done(false);
+      d.querySelector('#cYes').onclick = () => done(true);
+      d.oncancel = () => resolve(false);
+      d.showModal();
+    });
+  }
+
+  // Convert a form into a plain object
+  const formData = (form) => Object.fromEntries(new FormData(form).entries());
+
+  const opt = (v, label, sel) => '<option value="' + U.esc(v) + '"' + (sel ? ' selected' : '') + '>' + U.esc(label) + '</option>';
+
+  window.MZ.UI = { $, $$, toast, modal, confirmBox, closeDialog, formData, errText, opt };
+})();
+
+</script>
+  <script>
+/* views_dash.js — Dashboard and Reports screens. */
+(function () {
+  'use strict';
+  const U = MZ.U, A = MZ.Analytics, DB = MZ.DB, { $, $$ } = MZ.UI;
+  const V = (MZ.Views = MZ.Views || {});
+  const e = U.esc, m = U.money;
+  const tile = (lbl, val, sub, cls) => '<div class="tile ' + (cls || '') + '"><div class="lbl">' + lbl + '</div><div class="val">' + val + '</div>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
+  const signed = (n) => '<span class="' + (n < 0 ? 'neg' : 'pos') + '">' + m(n) + '</span>';
+
+  V.dashboard = async function (el) {
+    const data = await DB.loadAll();
+    const d = A.dashboard(data, U.today());
+    const last = await DB.getMeta('lastExport', null);
+    const hasData = data.sales.length + data.products.length + data.expenses.length > 0;
+    let banner = '';
+    if (hasData) {
+      const days = last ? Math.floor((Date.now() - new Date(last.at)) / 86400000) : null;
+      if (days === null) banner = '<div class="banner">You have not made a backup yet. Go to <a href="#/backup">Backup</a> and save a copy of your records.</div>';
+      else if (days >= 7) banner = '<div class="banner">Your last backup was ' + days + ' days ago. Please make a new one in <a href="#/backup">Backup</a>.</div>';
+    }
+    const empty = !hasData ? '<div class="banner info"><b>Welcome!</b> Start by adding your products in <a href="#/inventory">Stock</a>, then record sales in <a href="#/sales">Sales</a>. This page fills in automatically.</div>' : '';
+
+    el.innerHTML =
+      '<div class="page-head"><div><h2>' + (function () { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'; })() + '</h2><span class="muted small">Business overview</span></div><span class="muted small">' + e(U.formatDate(U.today())) + '</span></div>' + banner + empty +
+      '<div class="grid tiles">' +
+      tile("Today's sales", m(d.todaySales), d.todayCount + ' sale(s)') +
+      tile("Today's gross profit", m(d.todayGross), 'Before expenses', 'blue') +
+      tile('Stock value (at cost)', m(d.inventoryValue), 'What your stock cost you') +
+      tile('Customer dues', m(d.dues), 'Money customers owe you', d.dues > 0 ? 'warn' : '') +
+      '</div>' +
+      '<div class="card"><h3>This month (' + e(U.monthLabel(U.monthKey(U.today()))) + ')</h3><div class="grid tiles">' +
+      tile('Sales', m(d.month.sales)) + tile('Gross profit', m(d.month.gross), 'Sales profit before expenses', 'blue') +
+      tile('Expenses', m(d.month.expenses)) + tile('Net profit', m(d.month.net), 'Gross profit − expenses', d.month.net < 0 ? 'warn' : '') +
+      '</div></div>' +
+      '<div class="card"><h3>Low-stock alerts</h3>' + (d.lowStock.length
+        ? '<div class="scroll"><table><tbody>' + d.lowStock.map((p) => '<tr><td><b>' + e(p.name) + '</b></td><td class="num"><span class="badge low">' + U.qty(p.qty) + ' ' + e(p.unit) + ' left</span></td></tr>').join('') + '</tbody></table></div>'
+        : '<p class="muted">No products are running low.</p>') + '</div>' +
+      '<div class="card"><h3>Monthly sales &amp; profit (last 6 months)</h3><canvas class="chart" id="chMonthly" role="img" aria-label="Monthly sales and gross profit chart"></canvas></div>' +
+      '<div class="card"><h3>Monthly profit summary</h3><div class="scroll"><table><thead><tr><th>Month</th><th class="num">Sales</th><th class="num">Gross profit</th><th class="num">Expenses</th><th class="num">Net profit</th></tr></thead><tbody>' +
+      d.series.slice().reverse().map((s) => '<tr><td>' + e(s.label) + '</td><td class="num">' + m(s.sales) + '</td><td class="num">' + m(s.gross) + '</td><td class="num">' + m(s.expenses) + '</td><td class="num">' + signed(s.net) + '</td></tr>').join('') +
+      '</tbody></table></div></div>' +
+      '<div class="grid cols2"><div class="card"><h3>Best-selling products (30 days)</h3>' + (d.bestSelling.length
+        ? '<table><tbody>' + d.bestSelling.map((p, i) => '<tr><td>' + (i + 1) + '. ' + e(p.name) + '</td><td class="num">' + U.qty(p.qty) + ' sold</td></tr>').join('') + '</tbody></table>'
+        : '<p class="muted">No sales in the last 30 days.</p>') + '</div>' +
+      '<div class="card"><h3>Recent transactions</h3>' + (d.recent.length
+        ? '<table><tbody>' + d.recent.map((s) => '<tr><td><a href="#" data-inv="' + s.id + '">' + e(s.invoiceNo) + '</a><br><span class="muted small">' + e(s.customerName) + ' · ' + e(U.formatDate(s.date)) + '</span></td><td class="num">' + m(s.total) + (s.due > 0 ? '<br><span class="badge low">Due ' + m(s.due) + '</span>' : '') + '</td></tr>').join('') + '</tbody></table>'
+        : '<p class="muted">No sales recorded yet.</p>') + '</div></div>';
+
+    MZ.Charts.mount($('#chMonthly'), { type: 'bar', labels: d.series.map((s) => s.label.split(' ')[0]), series: [
+      { name: 'Sales', values: d.series.map((s) => s.sales), color: '#14532d' },
+      { name: 'Gross profit', values: d.series.map((s) => s.gross), color: '#3b6ea5' },
+    ] });
+    $$('[data-inv]', el).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); V.showInvoice(Number(a.dataset.inv)); }));
+  };
+
+  /* ---------- Reports ---------- */
+  const state = { preset: 'month', from: '', to: '', group: 'day' };
+  function presetRange(p) {
+    const t = U.today();
+    if (p === 'today') return [t, t];
+    if (p === 'week') return [U.weekStart(t), t];
+    if (p === 'month') return [U.monthKey(t) + '-01', t];
+    if (p === 'lastmonth') {
+      const first = new Date(t.slice(0, 7) + '-01T00:00:00'); first.setMonth(first.getMonth() - 1);
+      const k = U.dateKey(first); const end = new Date(first.getFullYear(), first.getMonth() + 1, 0);
+      return [k, U.dateKey(end)];
+    }
+    if (p === '30') return [U.addDays(t, -29), t];
+    if (p === 'year') return [t.slice(0, 4) + '-01-01', t];
+    return [state.from || t, state.to || t];
+  }
+  const pct = (cur, prev) => prev === 0 ? (cur === 0 ? '—' : 'new') : ((cur - prev) / Math.abs(prev) * 100).toFixed(0) + '%';
+  const cmp = (cur, prev) => '<span class="muted small">before: ' + m(prev) + ' (' + pct(cur, prev) + ')</span>';
+
+  V.reports = async function (el) {
+    const data = await DB.loadAll();
+    function draw() {
+      if (state.preset !== 'custom') { const r = presetRange(state.preset); state.from = r[0]; state.to = r[1]; }
+      const bad = !U.isValidDate(state.from) || !U.isValidDate(state.to) || state.from > state.to;
+      const presets = [['today', 'Today'], ['week', 'This week'], ['month', 'This month'], ['lastmonth', 'Last month'], ['30', 'Last 30 days'], ['year', 'This year'], ['custom', 'Custom']];
+      let body = '';
+      if (bad) body = '<div class="err">Please choose a valid start date that is not after the end date.</div>';
+      else {
+        const r = A.report(data, state.from, state.to, state.group);
+        const t = r.totals, p = r.previous;
+        body =
+          '<div class="grid tiles">' +
+          tile('Sales', m(t.sales), cmp(t.sales, p.sales)) +
+          tile('Gross profit', m(t.gross), 'Sales profit, before expenses · ' + cmp(t.gross, p.gross), 'blue') +
+          tile('Expenses', m(t.expenses), cmp(t.expenses, p.expenses)) +
+          tile('Net profit', m(t.net), 'Gross profit − expenses · ' + cmp(t.net, p.net), t.net < 0 ? 'warn' : '') +
+          '</div>' +
+          '<p class="muted small">Compared with the previous period (' + e(U.formatDate(r.prevRange[0])) + ' – ' + e(U.formatDate(r.prevRange[1])) + '). ' + t.count + ' sale(s) in this period; ' + m(t.collected) + ' collected, ' + m(t.due) + ' still due from these sales.</p>' +
+          '<div class="card"><h3>Sales trend</h3><canvas class="chart" id="chTrend" role="img" aria-label="Sales, gross profit and expenses chart"></canvas></div>' +
+          '<div class="card"><h3>Breakdown</h3>' + (r.rows.length ? '<div class="scroll"><table><thead><tr><th>Period</th><th class="num">Sales</th><th class="num">Gross profit</th><th class="num">Expenses</th><th class="num">Net profit</th></tr></thead><tbody>' +
+            r.rows.map((x) => '<tr><td>' + e(x.label) + '</td><td class="num">' + m(x.sales) + '</td><td class="num">' + m(x.gross) + '</td><td class="num">' + m(x.expenses) + '</td><td class="num">' + signed(x.net) + '</td></tr>').join('') +
+            '</tbody><tfoot><tr><td>Total</td><td class="num">' + m(t.sales) + '</td><td class="num">' + m(t.gross) + '</td><td class="num">' + m(t.expenses) + '</td><td class="num">' + signed(t.net) + '</td></tr></tfoot></table></div>' : '<p class="muted">No records in this period.</p>') + '</div>' +
+          '<div class="grid cols2"><div class="card"><h3>Best-selling products</h3>' + (r.bestSelling.length ? '<table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Sales</th></tr></thead><tbody>' + r.bestSelling.map((x) => '<tr><td>' + e(x.name) + '</td><td class="num">' + U.qty(x.qty) + '</td><td class="num">' + m(x.revenue) + '</td></tr>').join('') + '</tbody></table>' : '<p class="muted">No sales.</p>') + '</div>' +
+          '<div class="card"><h3>Most profitable products</h3>' + (r.mostProfitable.length ? '<table><thead><tr><th>Product</th><th class="num">Profit</th></tr></thead><tbody>' + r.mostProfitable.map((x) => '<tr><td>' + e(x.name) + '</td><td class="num">' + signed(x.profit) + '</td></tr>').join('') + '</tbody></table><p class="muted small">Product profit is before any sale-level discount.</p>' : '<p class="muted">No sales.</p>') + '</div></div>' +
+          '<div class="card"><h3>Expenses by category</h3>' + (r.expenseByCategory.length ? '<table><tbody>' + r.expenseByCategory.map((x) => '<tr><td>' + e(x.category) + '</td><td class="num">' + m(x.amount) + '</td></tr>').join('') + '</tbody></table>' : '<p class="muted">No expenses.</p>') + '</div>';
+        el._trend = r;
+      }
+      const val = A.valuationRows(data.products);
+      const valTotal = A.inventoryValue(data.products);
+      const retail = U.round2(val.reduce((a, x) => a + x.retail, 0));
+      el.innerHTML = '<div class="page-head"><h2>Reports</h2></div>' +
+        '<div class="chips">' + presets.map((x) => '<button type="button" class="chip secondary ' + (state.preset === x[0] ? 'on' : '') + '" data-p="' + x[0] + '">' + x[1] + '</button>').join('') + '</div>' +
+        '<div class="row"><div><label for="rFrom">From</label><input type="date" id="rFrom" value="' + e(state.from) + '"></div><div><label for="rTo">To</label><input type="date" id="rTo" value="' + e(state.to) + '"></div></div>' +
+        '<label for="rGroup">Show by</label><select id="rGroup"><option value="day"' + (state.group === 'day' ? ' selected' : '') + '>Day</option><option value="week"' + (state.group === 'week' ? ' selected' : '') + '>Week</option><option value="month"' + (state.group === 'month' ? ' selected' : '') + '>Month</option></select>' +
+        '<div style="height:14px"></div>' + body +
+        '<div class="card"><h3>Inventory valuation (now)</h3><p>Total at cost: <b>' + m(valTotal) + '</b> · If all sold at current prices: <b>' + m(retail) + '</b></p>' +
+        (val.length ? '<div class="scroll"><table class="rt"><thead><tr><th>Product</th><th>Category</th><th class="num">Stock</th><th class="num">Cost</th><th class="num">Value</th></tr></thead><tbody>' +
+          val.map((x) => '<tr><td class="title" data-l="Product">' + e(x.name) + (x.archived ? ' <span class="badge gray">Archived</span>' : '') + '</td><td data-l="Category">' + e(x.category) + '</td><td class="num" data-l="Stock">' + U.qty(x.qty) + ' ' + e(x.unit) + '</td><td class="num" data-l="Cost">' + m(x.cost) + '</td><td class="num" data-l="Value">' + m(x.value) + '</td></tr>').join('') + '</tbody></table></div>' : '<p class="muted">No stock on hand.</p>') + '</div>';
+      if (!bad && el._trend) {
+        const rows = el._trend.rows;
+        MZ.Charts.mount($('#chTrend'), { type: rows.length > 12 ? 'line' : 'bar', labels: rows.map((x) => state.group === 'month' ? x.label.split(' ')[0] : x.key.slice(5)), series: [
+          { name: 'Sales', values: rows.map((x) => x.sales), color: '#14532d' },
+          { name: 'Gross profit', values: rows.map((x) => x.gross), color: '#3b6ea5' },
+          { name: 'Expenses', values: rows.map((x) => x.expenses), color: '#b7791f' },
+        ] });
+      }
+      $$('[data-p]', el).forEach((b) => b.addEventListener('click', () => { state.preset = b.dataset.p; if (state.preset === 'custom') { state.from = state.from || U.today(); state.to = state.to || U.today(); } draw(); }));
+      $('#rFrom', el).addEventListener('change', (ev) => { state.preset = 'custom'; state.from = ev.target.value; draw(); });
+      $('#rTo', el).addEventListener('change', (ev) => { state.preset = 'custom'; state.to = ev.target.value; draw(); });
+      $('#rGroup', el).addEventListener('change', (ev) => { state.group = ev.target.value; draw(); });
+    }
+    draw();
+  };
+})();
+
+</script>
+  <script>
+/* views_stock.js — Inventory screen. */
+(function () {
+  'use strict';
+  const U = MZ.U, I = MZ.Inventory, UI = MZ.UI, { $, $$, opt } = MZ.UI;
+  const V = (MZ.Views = MZ.Views || {});
+  const e = U.esc, m = U.money;
+  const filt = { q: '', cat: '', showArchived: false, lowOnly: false };
+
+  function productForm(p) {
+    const isNew = !p; p = p || {};
+    return '<label for="fName">Product name</label><input id="fName" name="name" value="' + e(p.name || '') + '" required maxlength="100" autocomplete="off">' +
+      '<div class="row"><div><label for="fCat">Category</label><input id="fCat" name="category" list="catList" value="' + e(p.category || '') + '" placeholder="e.g. Solar panel, LED, Battery" autocomplete="off"></div>' +
+      '<div><label for="fUnit">Unit</label><input id="fUnit" name="unit" value="' + e(p.unit || 'pcs') + '" placeholder="pcs, meter, set"></div></div>' +
+      '<div class="row"><div><label for="fCost">Purchase cost (৳ each)</label><input id="fCost" name="costPrice" inputmode="decimal" value="' + (p.costPrice != null ? p.costPrice : '') + '" required></div>' +
+      '<div><label for="fPrice">Selling price (৳ each)</label><input id="fPrice" name="sellPrice" inputmode="decimal" value="' + (p.sellPrice != null ? p.sellPrice : '') + '" required></div></div>' +
+      '<div class="row">' + (isNew ? '<div><label for="fQty">Opening quantity</label><input id="fQty" name="qty" inputmode="decimal" value="0"></div>' : '') +
+      '<div><label for="fLow">Warn me when stock is at or below</label><input id="fLow" name="lowStock" inputmode="decimal" value="' + (p.lowStock != null ? p.lowStock : 5) + '"></div></div>' +
+      (isNew ? '' : '<p class="muted small">To change the quantity, use <b>Add stock</b> or <b>Adjust</b> so there is a record of it.</p>');
+  }
+
+  V.inventory = async function (el) {
+    const products = await I.listProducts();
+    const cats = Array.from(new Set(products.map((p) => p.category))).sort();
+    const list = products.filter(function (p) {
+      if (!filt.showArchived && p.archived) return false;
+      if (filt.cat && p.category !== filt.cat) return false;
+      if (filt.lowOnly && !(p.lowStock > 0 && p.qty <= p.lowStock)) return false;
+      if (filt.q && (p.name + ' ' + p.category).toLowerCase().indexOf(filt.q.toLowerCase()) < 0) return false;
+      return true;
+    }).sort((a, b) => a.name.localeCompare(b.name));
+    const totalCost = U.round2(list.reduce((t, p) => t + p.qty * p.costPrice, 0));
+
+    el.innerHTML =
+      '<div class="page-head"><h2>Stock</h2><button id="addP">+ New product</button></div>' +
+      '<datalist id="catList">' + cats.map((c) => '<option value="' + e(c) + '">').join('') + '</datalist>' +
+      '<div class="toolbar"><input type="search" id="q" placeholder="Search products…" value="' + e(filt.q) + '" aria-label="Search products">' +
+      '<select id="cat" aria-label="Category"><option value="">All categories</option>' + cats.map((c) => opt(c, c, c === filt.cat)).join('') + '</select>' +
+      '<select id="mode" aria-label="Filter"><option value="active"' + (!filt.showArchived && !filt.lowOnly ? ' selected' : '') + '>Active products</option><option value="low"' + (filt.lowOnly ? ' selected' : '') + '>Low stock only</option><option value="all"' + (filt.showArchived ? ' selected' : '') + '>Include archived</option></select></div>' +
+      '<p class="muted small">' + list.length + ' product(s) · stock value at cost: <b>' + m(totalCost) + '</b></p>' +
+      (list.length ? '<table class="rt"><thead><tr><th>Product</th><th>Category</th><th class="num">Stock</th><th class="num">Cost</th><th class="num">Price</th><th class="num">Value</th><th></th></tr></thead><tbody>' +
+        list.map(function (p) {
+          const low = p.lowStock > 0 && p.qty <= p.lowStock;
+          return '<tr><td class="title" data-l="Product">' + e(p.name) + (p.archived ? ' <span class="badge gray">Archived</span>' : '') + '</td>' +
+            '<td data-l="Category">' + e(p.category) + '</td>' +
+            '<td class="num" data-l="Stock">' + U.qty(p.qty) + ' ' + e(p.unit) + (low && !p.archived ? ' <span class="badge low">Low</span>' : '') + '</td>' +
+            '<td class="num" data-l="Cost">' + m(p.costPrice) + '</td><td class="num" data-l="Price">' + m(p.sellPrice) + '</td>' +
+            '<td class="num" data-l="Value">' + m(p.qty * p.costPrice) + '</td>' +
+            '<td class="act"><div class="actions">' +
+            (p.archived ? '<button class="small secondary" data-a="restore" data-id="' + p.id + '">Restore</button>' :
+              '<button class="small" data-a="buy" data-id="' + p.id + '">Add stock</button><button class="small secondary" data-a="adj" data-id="' + p.id + '">Adjust</button><button class="small secondary" data-a="edit" data-id="' + p.id + '">Edit</button>') +
+            '<button class="small secondary" data-a="hist" data-id="' + p.id + '">History</button>' +
+            (p.archived ? '' : '<button class="small danger" data-a="arch" data-id="' + p.id + '">Archive</button>') + '</div></td></tr>';
+        }).join('') + '</tbody></table>' : '<p class="empty">' + (products.length ? 'No products match your search.' : 'No products yet. Tap “+ New product” to add your first one.') + '</p>');
+
+    $('#q', el).addEventListener('input', function (ev) { filt.q = ev.target.value; const pos = ev.target.selectionStart; V.inventory(el).then(() => { const q = $('#q'); q.focus(); q.setSelectionRange(pos, pos); }); });
+    $('#cat', el).addEventListener('change', (ev) => { filt.cat = ev.target.value; V.inventory(el); });
+    $('#mode', el).addEventListener('change', (ev) => { filt.showArchived = ev.target.value === 'all'; filt.lowOnly = ev.target.value === 'low'; V.inventory(el); });
+    $('#addP', el).addEventListener('click', () => UI.modal({
+      title: 'New product', submitLabel: 'Save product', body: productForm(null),
+      onSubmit: async (f) => { await I.saveProduct(UI.formData(f)); UI.toast('Product saved.'); V.inventory(el); },
+    }));
+    const byId = (id) => products.find((p) => p.id === Number(id));
+    $$('[data-a]', el).forEach((b) => b.addEventListener('click', async function () {
+      const p = byId(b.dataset.id), a = b.dataset.a;
+      if (a === 'edit') UI.modal({ title: 'Edit product', body: productForm(p), onSubmit: async (f) => { await I.saveProduct(UI.formData(f), p.id); UI.toast('Product updated.'); V.inventory(el); } });
+      if (a === 'buy') UI.modal({
+        title: 'Add stock: ' + p.name, submitLabel: 'Add to stock',
+        body: '<p class="muted small">Current stock: ' + U.qty(p.qty) + ' ' + e(p.unit) + ' · current cost ' + m(p.costPrice) + '. The average cost is updated automatically.</p>' +
+          '<div class="row"><div><label>Quantity bought</label><input name="qty" inputmode="decimal" required></div><div><label>Cost per unit (৳)</label><input name="unitCost" inputmode="decimal" value="' + p.costPrice + '" required></div></div>' +
+          '<div class="row"><div><label>Date</label><input type="date" name="date" value="' + U.today() + '" required></div><div><label>Supplier (optional)</label><input name="supplier"></div></div><label>Note (optional)</label><input name="note">',
+        onSubmit: async (f) => { await I.addPurchase(Object.assign(UI.formData(f), { productId: p.id })); UI.toast('Stock added.'); V.inventory(el); },
+      });
+      if (a === 'adj') UI.modal({
+        title: 'Adjust stock: ' + p.name, submitLabel: 'Save adjustment',
+        body: '<p class="muted small">Current stock: <b>' + U.qty(p.qty) + ' ' + e(p.unit) + '</b>. Use a minus sign to reduce (e.g. -2 for damaged items).</p>' +
+          '<label>Change in quantity</label><input name="change" inputmode="decimal" placeholder="-2 or 3" required><label>Reason</label><input name="reason" placeholder="Damaged, counted again, returned…" required>',
+        onSubmit: async (f) => { await I.adjustStock(Object.assign(UI.formData(f), { productId: p.id })); UI.toast('Stock adjusted.'); V.inventory(el); },
+      });
+      if (a === 'arch') { if (await UI.confirmBox('Archive product?', '“' + e(p.name) + '” will be hidden from lists and cannot be sold. Its history is kept and you can restore it any time.', 'Archive')) { await I.setArchived(p.id, true); UI.toast('Archived.'); V.inventory(el); } }
+      if (a === 'restore') { await I.setArchived(p.id, false); UI.toast('Restored.'); V.inventory(el); }
+      if (a === 'hist') {
+        const rows = await I.history(p.id);
+        const label = { opening: 'Opening stock', purchase: 'Purchase', sale: 'Sale', adjustment: 'Adjustment' };
+        UI.modal({
+          title: 'History: ' + p.name, wide: true,
+          body: rows.length ? '<div class="scroll"><table><thead><tr><th>Date</th><th>Type</th><th class="num">Change</th><th class="num">Stock after</th><th>Note</th></tr></thead><tbody>' + rows.map((r) =>
+            '<tr><td>' + e(U.formatDateTime(r.createdAt)) + '</td><td>' + e(label[r.type] || r.type) + '</td><td class="num ' + (r.qtyChange < 0 ? 'neg' : 'pos') + '">' + (r.qtyChange > 0 ? '+' : '') + U.qty(r.qtyChange) + '</td><td class="num">' + U.qty(r.qtyAfter) + '</td><td>' + e([r.supplier, r.note, r.type === 'purchase' ? '@ ' + m(r.unitCost) : ''].filter(Boolean).join(' · ')) + '</td></tr>').join('') + '</tbody></table></div>'
+            : '<p class="empty">No stock movements yet.</p>',
+        });
+      }
+    }));
+  };
+})();
+
+</script>
+  <script>
+/* views_sales.js — Sales, invoices, Customers. */
+(function () {
+  'use strict';
+  const U = MZ.U, UI = MZ.UI, { $, $$, opt } = MZ.UI;
+  const V = (MZ.Views = MZ.Views || {});
+  const e = U.esc, m = U.money;
+
+  /* ---------- Invoice ---------- */
+  function invoiceHtml(s) {
+    return '<div class="invoice"><h2>MIZAN SOLAR AND ELECTRONICS</h2><div class="sub">Solar &amp; Electronics · Bangladesh</div>' +
+      '<div class="meta"><div><b>Invoice:</b> ' + e(s.invoiceNo) + '<br><b>Date:</b> ' + e(U.formatDate(s.date)) + ', ' + e(U.formatTime(s.createdAt)) + '</div>' +
+      '<div><b>Customer:</b> ' + e(s.customerName) + (s.customerPhone ? '<br>' + e(s.customerPhone) : '') + '</div></div>' +
+      '<table><thead><tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Total</th></tr></thead><tbody>' +
+      s.items.map((it, i) => '<tr><td>' + (i + 1) + '</td><td>' + e(it.name) + '</td><td class="num">' + U.qty(it.qty) + ' ' + e(it.unit || '') + '</td><td class="num">' + m(it.unitPrice) + '</td><td class="num">' + m(it.lineTotal) + '</td></tr>').join('') +
+      '</tbody><tfoot>' +
+      (s.discount > 0 ? '<tr><td colspan="4" class="right">Subtotal</td><td class="num">' + m(s.subtotal) + '</td></tr><tr><td colspan="4" class="right">Discount</td><td class="num">-' + m(s.discount) + '</td></tr>' : '') +
+      '<tr><td colspan="4" class="right">Total</td><td class="num">' + m(s.total) + '</td></tr>' +
+      '<tr><td colspan="4" class="right">Paid</td><td class="num">' + m(s.paid) + '</td></tr>' +
+      '<tr><td colspan="4" class="right">Balance due</td><td class="num">' + m(s.due) + '</td></tr></tfoot></table>' +
+      (s.note ? '<p><b>Note:</b> ' + e(s.note) + '</p>' : '') + '<p class="sub" style="margin-top:16px">Thank you for your purchase.</p></div>';
+  }
+  V.showInvoice = async function (sale) {
+    if (typeof sale === 'number') sale = await MZ.Sales.getSale(sale);
+    if (!sale) return UI.toast('Invoice not found.', true);
+    UI.modal({
+      title: 'Invoice ' + sale.invoiceNo, wide: true, body: invoiceHtml(sale),
+      extraButtons: '<button type="button" id="prn" class="blue">Print invoice</button>',
+      onOpen: (d) => d.querySelector('#prn').addEventListener('click', function () {
+        document.getElementById('print-area').innerHTML = invoiceHtml(sale);
+        window.print();
+      }),
+    });
+  };
+
+  /* ---------- Sale form ---------- */
+  async function openSaleForm(onDone) {
+    const [allP, customers] = await Promise.all([MZ.Inventory.listProducts(), MZ.DB.getAll('customers')]);
+    const products = allP.filter((p) => !p.archived && p.qty > 0).sort((a, b) => a.name.localeCompare(b.name));
+    if (!products.length) return UI.toast('There are no products in stock to sell. Add stock first.', true);
+    customers.sort((a, b) => a.name.localeCompare(b.name));
+    const pById = (id) => products.find((p) => p.id === Number(id));
+    let newCustId = null, paidTouched = false;
+
+    const lineHtml = () => '<div class="line" data-line><div class="row"><div class="full"><label>Product</label><select class="lp"><option value="">Choose product…</option>' +
+      products.map((p) => '<option value="' + p.id + '">' + e(p.name) + ' — ' + U.qty(p.qty) + ' ' + e(p.unit) + ' in stock</option>').join('') + '</select></div>' +
+      '<div><label>Quantity</label><input class="lq" inputmode="decimal" value="1"></div><div><label>Price each (৳)</label><input class="lpr" inputmode="decimal"></div>' +
+      '<div class="full"><span class="muted small lhint"></span> <b>Line total: <span class="ltotal">৳0.00</span></b> <button type="button" class="small danger lrm" style="float:right">Remove</button></div></div></div>';
+
+    UI.modal({
+      title: 'New sale', wide: true, submitLabel: 'Save sale',
+      body: '<div class="row"><div><label>Date</label><input type="date" name="date" value="' + U.today() + '" required></div>' +
+        '<div><label>Customer (optional)</label><select name="customerId" id="sCust"><option value="">Walk-in customer</option>' + customers.map((c) => opt(c.id, c.name + (c.phone ? ' · ' + c.phone : ''))).join('') + '<option value="__new">＋ New customer…</option></select></div></div>' +
+        '<div class="row hidden" id="newCust"><div><label>New customer name</label><input name="newName"></div><div><label>Phone (optional)</label><input name="newPhone" inputmode="tel"></div></div>' +
+        '<div style="margin-top:12px"><b>Items</b></div><div id="lines"></div><button type="button" class="secondary" id="addLine">+ Add another item</button>' +
+        '<div class="row"><div><label>Discount (৳)</label><input name="discount" id="sDisc" inputmode="decimal" value="0"></div><div><label>Amount paid now (৳)</label><input name="paid" id="sPaid" inputmode="decimal"></div></div>' +
+        '<label>Note (optional)</label><input name="note">' +
+        '<div class="totals"><div><span>Subtotal</span><b id="tSub">৳0.00</b></div><div><span>Discount</span><b id="tDisc">৳0.00</b></div><div class="big"><span>Total</span><span id="tTot">৳0.00</span></div>' +
+        '<div><span>Gross profit on this sale</span><b id="tProf">৳0.00</b></div><div><span>Balance due</span><b id="tDue">৳0.00</b></div></div>',
+      onOpen: function (d) {
+        const linesEl = d.querySelector('#lines');
+        function calc() {
+          let sub = 0, cost = 0;
+          $$('[data-line]', d).forEach(function (ln) {
+            const p = pById($('.lp', ln).value), q = U.parseNum($('.lq', ln).value), pr = U.parseNum($('.lpr', ln).value);
+            const ok = p && q > 0 && pr >= 0;
+            const lt = ok ? q * pr : 0;
+            $('.ltotal', ln).textContent = m(lt);
+            $('.lhint', ln).textContent = p ? 'Cost ' + m(p.costPrice) + ' · ' : '';
+            if (ok) { sub += lt; cost += q * p.costPrice; }
+          });
+          const disc = U.parseNum($('#sDisc', d).value) || 0;
+          const total = U.round2(sub - disc);
+          if (!paidTouched) $('#sPaid', d).value = total > 0 ? total.toFixed(2) : '';
+          const paid = U.parseNum($('#sPaid', d).value) || 0;
+          $('#tSub', d).textContent = m(sub); $('#tDisc', d).textContent = m(disc); $('#tTot', d).textContent = m(total);
+          $('#tProf', d).textContent = m(total - cost); $('#tDue', d).textContent = m(total - paid);
+        }
+        function addLine() {
+          linesEl.insertAdjacentHTML('beforeend', lineHtml());
+          const ln = linesEl.lastElementChild;
+          $('.lp', ln).addEventListener('change', function () { const p = pById(this.value); $('.lpr', ln).value = p ? p.sellPrice : ''; calc(); });
+          $$('input', ln).forEach((i) => i.addEventListener('input', calc));
+          $('.lrm', ln).addEventListener('click', function () { if ($$('[data-line]', d).length > 1) { ln.remove(); calc(); } });
+        }
+        addLine();
+        $('#addLine', d).addEventListener('click', addLine);
+        $('#sDisc', d).addEventListener('input', calc);
+        $('#sPaid', d).addEventListener('input', function () { paidTouched = true; calc(); });
+        $('#sCust', d).addEventListener('change', function () { $('#newCust', d).classList.toggle('hidden', this.value !== '__new'); });
+      },
+      onSubmit: async function (form) {
+        const f = UI.formData(form);
+        const items = $$('[data-line]', form).map((ln) => ({ productId: $('.lp', ln).value, qty: $('.lq', ln).value, unitPrice: $('.lpr', ln).value }));
+        let customerId = f.customerId;
+        if (customerId === '__new') {
+          if (!newCustId) newCustId = await MZ.Customers.saveCustomer({ name: f.newName, phone: f.newPhone });
+          customerId = newCustId;
+        }
+        const sale = await MZ.Sales.recordSale({ date: f.date, customerId: customerId || null, discount: f.discount, paid: f.paid, note: f.note, items: items });
+        UI.closeDialog(); UI.toast('Sale saved: ' + sale.invoiceNo);
+        if (onDone) onDone();
+        V.showInvoice(sale);
+        return false;
+      },
+    });
+  }
+
+  /* ---------- Sales list ---------- */
+  const sf = { q: '', dueOnly: false };
+  V.sales = async function (el) {
+    const all = await MZ.Sales.listSales();
+    const list = all.filter((s) => (!sf.dueOnly || s.due > 0) && (!sf.q || (s.invoiceNo + ' ' + s.customerName + ' ' + s.date).toLowerCase().indexOf(sf.q.toLowerCase()) >= 0)).slice(0, 300);
+    el.innerHTML = '<div class="page-head"><h2>Sales</h2><button id="newSale">+ New sale</button></div>' +
+      '<div class="toolbar"><input type="search" id="sq" placeholder="Search invoice or customer…" value="' + e(sf.q) + '" aria-label="Search sales"><select id="sdue" aria-label="Filter"><option value="">All sales</option><option value="due"' + (sf.dueOnly ? ' selected' : '') + '>With balance due</option></select></div>' +
+      (list.length ? '<table class="rt"><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th class="num">Total</th><th class="num">Paid</th><th class="num">Due</th><th class="num">Gross profit</th><th></th></tr></thead><tbody>' +
+        list.map((s) => '<tr><td class="title" data-l="Invoice">' + e(s.invoiceNo) + '</td><td data-l="Date">' + e(U.formatDate(s.date)) + ' <span class="muted small">' + e(U.formatTime(s.createdAt)) + '</span></td><td data-l="Customer">' + e(s.customerName) + '</td><td class="num" data-l="Total">' + m(s.total) + '</td><td class="num" data-l="Paid">' + m(s.paid) + '</td><td class="num" data-l="Due">' + (s.due > 0 ? '<span class="badge low">' + m(s.due) + '</span>' : m(0)) + '</td><td class="num" data-l="Gross profit">' + m(s.profit) + '</td><td class="act"><button class="small secondary" data-inv="' + s.id + '">Invoice</button></td></tr>').join('') + '</tbody></table>' +
+        (all.length > 300 ? '<p class="muted small">Showing the latest 300 sales. Use search to find older ones.</p>' : '')
+        : '<p class="empty">' + (all.length ? 'No sales match.' : 'No sales yet. Tap “+ New sale” to record your first sale.') + '</p>');
+    $('#newSale', el).addEventListener('click', () => openSaleForm(() => V.sales(el)));
+    $('#sq', el).addEventListener('input', (ev) => { sf.q = ev.target.value; const pos = ev.target.selectionStart; V.sales(el).then(() => { const q = $('#sq'); q.focus(); q.setSelectionRange(pos, pos); }); });
+    $('#sdue', el).addEventListener('change', (ev) => { sf.dueOnly = ev.target.value === 'due'; V.sales(el); });
+    $$('[data-inv]', el).forEach((b) => b.addEventListener('click', () => V.showInvoice(Number(b.dataset.inv))));
+  };
+
+  /* ---------- Customers ---------- */
+  const cf = { q: '', dueOnly: false };
+  const custForm = (c) => { c = c || {}; return '<label>Name</label><input name="name" value="' + e(c.name || '') + '" required maxlength="100"><label>Phone</label><input name="phone" inputmode="tel" value="' + e(c.phone || '') + '"><label>Address (optional)</label><input name="address" value="' + e(c.address || '') + '">'; };
+
+  async function openCustomer(id, el) {
+    const d = await MZ.Customers.detail(id), c = d.customer;
+    UI.modal({
+      title: c.name, wide: true,
+      body: '<p>' + (c.phone ? '📞 ' + e(c.phone) : '<span class="muted">No phone</span>') + (c.address ? ' · ' + e(c.address) : '') + '</p>' +
+        '<div class="grid tiles"><div class="tile"><div class="lbl">Total purchases</div><div class="val">' + m(d.totalSales) + '</div></div><div class="tile"><div class="lbl">Total paid</div><div class="val">' + m(d.totalPaid) + '</div></div><div class="tile ' + (d.balance > 0 ? 'warn' : '') + '"><div class="lbl">Balance due</div><div class="val">' + m(d.balance) + '</div></div></div>' +
+        '<h3>Purchase history</h3>' + (d.sales.length ? '<div class="scroll"><table><thead><tr><th>Invoice</th><th>Date</th><th class="num">Total</th><th class="num">Paid</th><th class="num">Due</th></tr></thead><tbody>' + d.sales.map((s) => '<tr><td><a href="#" data-inv="' + s.id + '">' + e(s.invoiceNo) + '</a></td><td>' + e(U.formatDate(s.date)) + '</td><td class="num">' + m(s.total) + '</td><td class="num">' + m(s.paid) + '</td><td class="num">' + m(s.due) + '</td></tr>').join('') + '</tbody></table></div>' : '<p class="muted">No purchases yet.</p>') +
+        '<h3 style="margin-top:14px">Payment history</h3>' + (d.payments.length ? '<div class="scroll"><table><thead><tr><th>Date</th><th class="num">Amount</th><th>Note</th></tr></thead><tbody>' + d.payments.map((p) => '<tr><td>' + e(U.formatDate(p.date)) + '</td><td class="num">' + m(p.amount) + '</td><td>' + e(p.note || '') + '</td></tr>').join('') + '</tbody></table></div>' : '<p class="muted">No payments yet.</p>'),
+      extraButtons: '<button type="button" class="secondary" id="cEdit">Edit</button>' + (d.balance > 0 ? '<button type="button" class="blue" id="cPay">Receive payment</button>' : ''),
+      onOpen: function (dl) {
+        $$('[data-inv]', dl).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); V.showInvoice(Number(a.dataset.inv)); }));
+        $('#cEdit', dl).addEventListener('click', () => UI.modal({ title: 'Edit customer', body: custForm(c), onSubmit: async (f) => { await MZ.Customers.saveCustomer(UI.formData(f), c.id); UI.toast('Customer updated.'); V.customers(el); } }));
+        const pay = $('#cPay', dl);
+        if (pay) pay.addEventListener('click', () => UI.modal({
+          title: 'Receive payment — ' + c.name, submitLabel: 'Save payment',
+          body: '<p>Balance due: <b>' + m(d.balance) + '</b></p><label>Amount received (৳)</label><input name="amount" inputmode="decimal" required><label>Date</label><input type="date" name="date" value="' + U.today() + '" required><label>Note (optional)</label><input name="note">',
+          onSubmit: async (f) => { const v = UI.formData(f); await MZ.Customers.receivePayment(c.id, v.amount, v.date, v.note); UI.toast('Payment saved.'); V.customers(el); },
+        }));
+      },
+    });
+  }
+
+  V.customers = async function (el) {
+    const all = await MZ.Customers.listWithBalances();
+    const list = all.filter((c) => (!cf.dueOnly || c.balance > 0) && (!cf.q || (c.name + ' ' + c.phone).toLowerCase().indexOf(cf.q.toLowerCase()) >= 0)).sort((a, b) => b.balance - a.balance || a.name.localeCompare(b.name));
+    const owed = U.round2(all.reduce((t, c) => t + Math.max(c.balance, 0), 0));
+    el.innerHTML = '<div class="page-head"><h2>Customers</h2><button id="addC">+ New customer</button></div>' +
+      '<div class="toolbar"><input type="search" id="cq" placeholder="Search name or phone…" value="' + e(cf.q) + '" aria-label="Search customers"><select id="cdue" aria-label="Filter"><option value="">All customers</option><option value="due"' + (cf.dueOnly ? ' selected' : '') + '>Owing money</option></select></div>' +
+      '<p class="muted small">' + all.length + ' customer(s) · total owed to you: <b>' + m(owed) + '</b></p>' +
+      (list.length ? '<table class="rt"><thead><tr><th>Name</th><th>Phone</th><th class="num">Purchases</th><th class="num">Balance due</th><th></th></tr></thead><tbody>' +
+        list.map((c) => '<tr><td class="title" data-l="Name">' + e(c.name) + '</td><td data-l="Phone">' + e(c.phone || '—') + '</td><td class="num" data-l="Purchases">' + m(c.totalSales) + '</td><td class="num" data-l="Balance due">' + (c.balance > 0 ? '<span class="badge low">' + m(c.balance) + '</span>' : m(0)) + '</td><td class="act"><button class="small secondary" data-open="' + c.id + '">Open</button></td></tr>').join('') + '</tbody></table>'
+        : '<p class="empty">' + (all.length ? 'No customers match.' : 'No customers yet. Customers can also be added while recording a sale.') + '</p>');
+    $('#addC', el).addEventListener('click', () => UI.modal({ title: 'New customer', body: custForm(), onSubmit: async (f) => { await MZ.Customers.saveCustomer(UI.formData(f)); UI.toast('Customer saved.'); V.customers(el); } }));
+    $('#cq', el).addEventListener('input', (ev) => { cf.q = ev.target.value; const pos = ev.target.selectionStart; V.customers(el).then(() => { const q = $('#cq'); q.focus(); q.setSelectionRange(pos, pos); }); });
+    $('#cdue', el).addEventListener('change', (ev) => { cf.dueOnly = ev.target.value === 'due'; V.customers(el); });
+    $$('[data-open]', el).forEach((b) => b.addEventListener('click', () => openCustomer(Number(b.dataset.open), el)));
+  };
+})();
+
+</script>
+  <script>
+/* views_misc.js — Expenses and Backup screens. */
+(function () {
+  'use strict';
+  const U = MZ.U, UI = MZ.UI, A = MZ.Analytics, { $, $$, opt } = MZ.UI;
+  const V = (MZ.Views = MZ.Views || {});
+  const e = U.esc, m = U.money;
+  let expMonth = U.monthKey(U.today());
+
+  const expForm = (x) => { x = x || {}; return '<div class="row"><div><label>Date</label><input type="date" name="date" value="' + e(x.date || U.today()) + '" required></div>' +
+    '<div><label>Category</label><select name="category">' + MZ.Expenses.CATEGORIES.map((c) => opt(c, c, c === x.category)).join('') + '</select></div></div>' +
+    '<div class="row"><div><label>Amount (৳)</label><input name="amount" inputmode="decimal" value="' + (x.amount != null ? x.amount : '') + '" required></div><div><label>Note (optional)</label><input name="note" value="' + e(x.note || '') + '"></div></div>'; };
+
+  V.expenses = async function (el) {
+    const [all, sales] = await Promise.all([MZ.Expenses.listExpenses(), MZ.Sales.listSales()]);
+    const valid = /^\d{4}-\d{2}$/.test(expMonth) ? expMonth : U.monthKey(U.today());
+    const list = all.filter((x) => U.monthKey(x.date) === valid);
+    const total = U.round2(list.reduce((t, x) => t + x.amount, 0));
+    const t = A.totals({ sales: sales, expenses: all }, valid + '-01', valid + '-31');
+    const byCat = {}; list.forEach((x) => { byCat[x.category] = (byCat[x.category] || 0) + x.amount; });
+
+    el.innerHTML = '<div class="page-head"><h2>Expenses</h2><button id="addE">+ New expense</button></div>' +
+      '<div class="card"><label for="eMonth" style="margin-top:0">Month</label><input type="month" id="eMonth" value="' + e(valid) + '"></div>' +
+      '<div class="card"><h3>Profit for ' + e(U.monthLabel(valid)) + '</h3>' +
+      '<div class="totals" style="margin-top:0"><div><span>Sales</span><b>' + m(t.sales) + '</b></div><div><span>Gross profit <small class="muted">(sales profit, before expenses)</small></span><b>' + m(t.gross) + '</b></div>' +
+      '<div><span>− Expenses</span><b>' + m(total) + '</b></div><div class="big"><span>Net profit <small class="muted">(what you really kept)</small></span><span class="' + (t.net < 0 ? 'neg' : '') + '">' + m(t.net) + '</span></div></div></div>' +
+      (Object.keys(byCat).length ? '<div class="card"><h3>By category</h3><table><tbody>' + Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]).map((k) => '<tr><td>' + e(k) + '</td><td class="num">' + m(byCat[k]) + '</td></tr>').join('') + '</tbody></table></div>' : '') +
+      '<div class="card"><h3>Expense list</h3>' + (list.length ? '<table class="rt"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="num">Amount</th><th></th></tr></thead><tbody>' +
+        list.map((x) => '<tr><td class="title" data-l="Date">' + e(U.formatDate(x.date)) + '</td><td data-l="Category">' + e(x.category) + '</td><td data-l="Note">' + e(x.note || '—') + '</td><td class="num" data-l="Amount">' + m(x.amount) + '</td><td class="act"><div class="actions"><button class="small secondary" data-ed="' + x.id + '">Edit</button><button class="small danger" data-del="' + x.id + '">Delete</button></div></td></tr>').join('') +
+        '</tbody><tfoot><tr><td colspan="3">Total</td><td class="num">' + m(total) + '</td><td></td></tr></tfoot></table>' : '<p class="empty">No expenses in this month.</p>') + '</div>';
+
+    $('#eMonth', el).addEventListener('change', (ev) => { expMonth = ev.target.value; V.expenses(el); });
+    $('#addE', el).addEventListener('click', () => UI.modal({ title: 'New expense', body: expForm(), submitLabel: 'Save expense', onSubmit: async (f) => { await MZ.Expenses.saveExpense(UI.formData(f)); UI.toast('Expense saved.'); V.expenses(el); } }));
+    $$('[data-ed]', el).forEach((b) => b.addEventListener('click', () => { const x = all.find((y) => y.id === Number(b.dataset.ed)); UI.modal({ title: 'Edit expense', body: expForm(x), onSubmit: async (f) => { await MZ.Expenses.saveExpense(UI.formData(f), x.id); UI.toast('Expense updated.'); V.expenses(el); } }); }));
+    $$('[data-del]', el).forEach((b) => b.addEventListener('click', async () => {
+      const x = all.find((y) => y.id === Number(b.dataset.del));
+      if (await UI.confirmBox('Delete this expense?', e(x.category) + ' · ' + m(x.amount) + ' on ' + e(U.formatDate(x.date)) + '. This cannot be undone.', 'Delete', true)) { await MZ.Expenses.deleteExpense(x.id); UI.toast('Expense deleted.'); V.expenses(el); }
+    }));
+  };
+
+  /* ---------- Backup ---------- */
+  const labels = { products: 'Products', stockMovements: 'Stock movements', customers: 'Customers', sales: 'Sales', payments: 'Payments', expenses: 'Expenses' };
+
+  V.backup = async function (el) {
+    const last = await MZ.DB.getMeta('lastExport', null);
+    const data = await MZ.DB.loadAll();
+    el.innerHTML = '<div class="page-head"><h2>Backup &amp; Transfer</h2></div>' +
+      '<div class="banner info">Your records are stored only inside this browser on this device. If you clear browser data or lose the device, they are gone — so save a backup regularly (for example every week).</div>' +
+      '<div class="card"><h3>1. Save a backup</h3><p>Downloads one file with <b>all</b> your records (products, stock history, customers, sales, payments, expenses).</p>' +
+      '<p class="muted small">Last backup: ' + (last ? e(U.formatDateTime(last.at)) : '<b>never</b>') + '</p><button id="bkExport">Download backup file</button><div id="bkMsg"></div></div>' +
+      '<div class="card"><h3>2. Restore or move to another device</h3><p>Choose a backup file. <b>This replaces everything currently in this app</b> with the records from the file. You will see a summary and be asked to confirm first.</p>' +
+      '<input type="file" id="bkFile" accept=".json,application/json"></div>' +
+      '<div class="card"><h3>Move data between PC and phone</h3><ol><li>On the first device: <b>Download backup file</b>.</li><li>Send the file to the other device (WhatsApp “to myself”, email, USB, or Google Drive).</li><li>On the other device: open this app → Backup → choose the file.</li></ol><p class="muted small">Always use the newest file and only keep working on one device at a time, otherwise newer records on the other device would be replaced.</p></div>' +
+      '<div class="card"><h3>Stored on this device now</h3><table><tbody>' + MZ.Backup.DATA_STORES.map((n) => '<tr><td>' + labels[n] + '</td><td class="num">' + data[n].length + '</td></tr>').join('') + '</tbody></table></div>';
+
+    $('#bkExport', el).addEventListener('click', async function () {
+      try {
+        const r = await MZ.Backup.exportToFile();
+        $('#bkMsg', el).innerHTML = '<div class="banner info" style="margin-top:12px">Backup saved as <b>' + e(r.name) + '</b> (' + r.counts.sales + ' sales, ' + r.counts.products + ' products, ' + r.counts.customers + ' customers, ' + r.counts.expenses + ' expenses). Check your Downloads folder.</div>';
+      } catch (err) { $('#bkMsg', el).innerHTML = '<div class="err">' + e(UI.errText(err)) + '</div>'; }
+    });
+
+    $('#bkFile', el).addEventListener('change', async function (ev) {
+      const f = ev.target.files[0]; ev.target.value = '';
+      if (!f) return;
+      let info;
+      try { info = await MZ.Backup.readFile(f); } catch (err) { return UI.modal({ title: 'Cannot use this file', body: '<div class="err" style="margin-top:12px">' + e(UI.errText(err)) + '</div><p>Nothing in the app was changed.</p>' }); }
+      const b = info.file;
+      const rows = MZ.Backup.DATA_STORES.map((n) => '<tr><td>' + labels[n] + '</td><td class="num">' + info.currentCounts[n] + '</td><td class="num"><b>' + b.counts[n] + '</b></td></tr>').join('');
+      UI.modal({
+        title: 'Replace all records?', submitLabel: 'Yes, replace my records', wide: true,
+        body: (info.duplicate ? '<div class="banner" style="margin-top:12px"><b>This exact backup was already imported on ' + e(U.formatDateTime(info.duplicate.at)) + '.</b> Importing it again will overwrite anything you added since then.</div>' : '') +
+          '<p style="margin-top:12px">Backup made on <b>' + e(U.formatDateTime(b.exportedAt)) + '</b>.</p>' +
+          '<table><thead><tr><th>Records</th><th class="num">Now in app</th><th class="num">In backup file</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          '<div class="banner" style="margin-top:12px">Everything currently in the app will be replaced. Records that are only in the app and not in the file will be lost. Tip: cancel and download a backup of the current data first if unsure.</div>',
+        onSubmit: async function () { await MZ.Backup.importFile(b); UI.toast('Backup restored successfully.'); MZ.refresh(); },
+      });
+    });
+  };
+})();
+
+</script>
+  <script>
+/* app.js — router, startup, service worker. */
+(function () {
+  'use strict';
+  const { $, $$, toast } = MZ.UI;
+  const routes = {
+    dashboard: MZ.Views.dashboard, sales: MZ.Views.sales, inventory: MZ.Views.inventory,
+    customers: MZ.Views.customers, expenses: MZ.Views.expenses, reports: MZ.Views.reports, backup: MZ.Views.backup,
+  };
+
+  async function route() {
+    const name = (location.hash.replace(/^#\//, '').split('?')[0]) || 'dashboard';
+    const fn = routes[name] || routes.dashboard;
+    $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.r === (routes[name] ? name : 'dashboard')));
+    const view = $('#view');
+    try {
+      await fn(view);
+    } catch (e) {
+      console.error(e);
+      view.innerHTML = '<div class="err">Could not load this screen: ' + MZ.U.esc(e.message || e) + '</div>';
+    }
+    window.scrollTo(0, 0);
+  }
+  MZ.refresh = route;
+
+  function tick() {
+    const n = new Date();
+    $('#clockTime').textContent = MZ.U.formatTime(n);
+    $('#clockDate').textContent = n.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  async function start() {
+    try {
+      await MZ.DB.open();
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+    } catch (e) {
+      $('#view').innerHTML = '<div class="err">' + MZ.U.esc(e.message || e) + '</div>';
+      return;
+    }
+    window.addEventListener('hashchange', route);
+    tick(); setInterval(tick, 15000);
+    await route();
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch((e) => console.warn('Service worker failed', e));
+    }
+  }
+  window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); toast('Unexpected error: ' + ((e.reason && e.reason.message) || e.reason), true); });
+  start();
+})();
+
+</script>
+</body>
+</html>
